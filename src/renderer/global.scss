@@ -1,0 +1,62 @@
+$light-blue: #C0C4CC;
+$med-blue: #60646C;
+$med-blue-hover: #80848C;
+$dark-blue: #20242C;
+$dark-blue-hover: #30343C;
+$dark-blue-transparent: rgba(32, 34, 44, .85);
+
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700');
+
+* { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body { margin: 0; height: 100%; }
+
+input {
+    border: 1px solid $med-blue;
+    font-size: 1.25rem;
+    font-weight: 300;
+    border-radius: 2px;
+}
+
+table { border-collapse: collapse; }
+
+#app {
+    font-family: 'Lato', sans-serif;
+    height: 100%;
+    min-height: 600px;
+    position: relative;
+}
+
+.overlay {
+    background: $dark-blue-transparent;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+
+    &.center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: $dark-blue-hover;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $med-blue;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $light-blue;
+}
