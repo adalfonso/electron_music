@@ -115,7 +115,8 @@
             .items {
                 background: $dark-blue;
                 color: $light-blue;
-                max-height: 300px;
+                height: 300px;
+                min-height: 300px;
                 overflow: auto;
                 width: 100%;
 
