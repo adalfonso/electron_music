@@ -4,7 +4,8 @@
             <h5>Artists</h5>
             <div class="items">
                 <div v-for="artist in artists" class="item"
-                    @click="selectArtist(artist)">
+                    @click="selectArtist(artist)"
+                    @dblclick="selectArtist(artist, true)">
                     {{ artist }}
                 </div>
             </div>
@@ -84,8 +85,14 @@
                 this.$emit('play', song);
             },
 
-            selectArtist(artist) {
+            selectArtist(artist, play = false) {
                 this.selected.artist = artist;
+
+                if (play) {
+                    let songs = this.songs.filter(song => song.artist === artist);
+
+                    this.$emit('playArtist', songs);
+                }
             },
 
             selectAlbum(album, play = false) {
@@ -102,9 +109,12 @@
         border-bottom: 6px solid $dark-blue-hover;
         display: flex;
         justify-content: space-around;
+        min-height: 200px;
 
         .category {
             background: $dark-blue-hover;
+            display: flex;
+            flex-direction: column;
             width: 25%;
 
             h5 {
@@ -120,7 +130,6 @@
                 cursor: pointer;
                 color: $light-blue;
                 height: 300px;
-                min-height: 300px;
                 overflow: auto;
                 width: 100%;
 

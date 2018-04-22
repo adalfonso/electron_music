@@ -3,7 +3,8 @@
         <fileMenu></fileMenu>
 
         <categories @play="play"
-            @playAlbum="playAlbum">
+            @playAlbum="playAlbum"
+            @playArtist="playArtist">
         </categories>
 
         <playlist
@@ -25,73 +26,81 @@ import categories from './Main/Categories.vue';
 import playlist from './Main/Playlist.vue';
 import toolbar from './Main/Toolbar.vue';
 
-    export default {
-        components : {
-            fileMenu, categories, playlist, toolbar
-        },
+export default {
+    components : { fileMenu, categories, playlist, toolbar },
 
-        data() {
-            return {
-                browsing: {
-                    type: 'none',
-                    songs: []
-                },
-
-                playlist: {
-                    type: 'none',
-                    songs: [],
-                    index: 0
-                },
-
-                playlistState: 'browsing'
-            }
-        },
-
-        methods: {
-            changePlaylistIndex(index) {
-                if (this.playlistState === 'browsing') {
-                    this.playlistState = 'playlist';
-                    this.playlist.type = this.browsing.type;
-                    this.playlist.songs = this.browsing.songs;
-                    return this.playlist.index = index;
-                }
-
-                this.playlist.index = index;
+    data() {
+        return {
+            browsing: {
+                type: 'none',
+                songs: []
             },
 
-            changePlaylistState(state) {
-                this.playlistState = state;
+            playlist: {
+                type: 'none',
+                songs: [],
+                index: 0
             },
 
-            play(song) {
+            playlistState: 'browsing'
+        }
+    },
+
+    methods: {
+        changePlaylistIndex(index) {
+            if (this.playlistState === 'browsing') {
                 this.playlistState = 'playlist';
-                this.playlist = {
-                    type: 'song',
-                    songs: [song],
+                this.playlist.type = this.browsing.type;
+                this.playlist.songs = this.browsing.songs;
+                return this.playlist.index = index;
+            }
+
+            this.playlist.index = index;
+        },
+
+        changePlaylistState(state) {
+            this.playlistState = state;
+        },
+
+        play(song) {
+            this.playlistState = 'playlist';
+            this.playlist = {
+                type: 'song',
+                songs: [song],
+                index: 0
+            };
+        },
+
+        playAlbum(songs, play) {
+            if (play) {
+                this.playlistState = 'playlist';
+
+                return this.playlist = {
+                    type: 'album',
+                    songs: songs,
                     index: 0
                 };
-            },
-
-            playAlbum(songs, play) {
-                if (play) {
-                    this.playlistState = 'playlist';
-
-                    return this.playlist = {
-                        type: 'album',
-                        songs: songs,
-                        index: 0
-                    };
-                }
-
-                this.playlistState = 'browsing';
-
-                this.browsing = {
-                    type: 'album',
-                    songs: songs
-                };
             }
+
+            this.playlistState = 'browsing';
+
+            this.browsing = {
+                type: 'album',
+                songs: songs
+            };
+        },
+
+        playArtist(songs) {
+            this.playlistState = 'playlist';
+
+            return this.playlist = {
+                type: 'artist',
+                songs: songs,
+                index: 0
+            };
         }
     }
+}
 </script>
 
 <style lang="scss">

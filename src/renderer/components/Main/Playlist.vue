@@ -13,13 +13,15 @@
             <tr>
                 <th>Artist</th>
                 <th>Album</th>
+                <th>Year</th>
                 <th>Title</th>
                 <th>Track</th>
             </tr>
             <tr v-for="(song, index) in songs"
                 @click="changePlaylistIndex(index)">
                 <td>{{ song.artist }}</td>
-                <td>{{ song.album }} ({{ song.year }})</td>
+                <td>{{ song.album }}</td>
+                <td>{{ song.year }}</td>
                 <td>{{ song.title }}</td>
                 <td>{{ song.track }}</td>
             </tr>
@@ -68,11 +70,10 @@
 <style lang="scss">
     #playlist {
         background: $dark-blue;
+        overflow: auto;
         flex: 1 1 auto;
 
-        .options {
-            padding: .5rem;
-        }
+        .options { padding: .5rem; }
 
         .playlist {
             color: $light-blue;
