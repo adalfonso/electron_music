@@ -46,9 +46,12 @@
         color: #fff;
         display: flex;
         font-weight: 300;
+        height: 2rem;
+        min-height: 2rem;
 
         .menu-item {
-            padding: 6px 8px;
+            line-height: 1rem;
+            padding: .5rem;
             transition: .2s;
 
             &:hover {

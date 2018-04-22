@@ -91,6 +91,7 @@ import Player from '@/../main/lib/player.js';
             align-items: center;
             background: $med-blue;
             border-radius: 50%;
+            cursor: pointer;
             display: flex;
             height: 5rem;
             justify-content: center;

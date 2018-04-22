@@ -45,6 +45,41 @@ table { border-collapse: collapse; }
     }
 }
 
+.capitalize {
+    &, * { text-transform: capitalize; }
+}
+
+.ui-button-set {
+    display: inline-flex;
+
+    > div {
+        background: $med-blue;
+        cursor: pointer;
+        padding: .5rem;
+        line-height: 1em;
+
+        &.selected {
+            background: $light-blue;
+            font-weight: 700;
+
+            &:hover { background: $light-blue; }
+        }
+
+        &:hover { background: $med-blue-hover; }
+
+        &:first-of-type {
+            border-bottom-left-radius: .25rem;
+            border-top-left-radius: .25rem;
+        }
+
+        &:last-of-type {
+            border-bottom-right-radius: .25rem;
+            border-top-right-radius: .25rem;
+        }
+    }
+
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }

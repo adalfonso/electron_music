@@ -8,7 +8,10 @@
 
         <playlist
             :playlist="playlist"
-            @changePlaylistIndex="changePlaylistIndex">
+            :browsing="browsing"
+            :state="playlistState"
+            @changePlaylistIndex="changePlaylistIndex"
+            @changeState="changePlaylistState">
         </playlist>
 
         <toolbar :playlist="playlist"></toolbar>
@@ -29,20 +32,39 @@ import toolbar from './Main/Toolbar.vue';
 
         data() {
             return {
+                browsing: {
+                    type: 'none',
+                    songs: []
+                },
+
                 playlist: {
                     type: 'none',
                     songs: [],
                     index: 0
-                }
+                },
+
+                playlistState: 'browsing'
             }
         },
 
         methods: {
             changePlaylistIndex(index) {
+                if (this.playlistState === 'browsing') {
+                    this.playlistState = 'playlist';
+                    this.playlist.type = this.browsing.type;
+                    this.playlist.songs = this.browsing.songs;
+                    return this.playlist.index = index;
+                }
+
                 this.playlist.index = index;
             },
 
+            changePlaylistState(state) {
+                this.playlistState = state;
+            },
+
             play(song) {
+                this.playlistState = 'playlist';
                 this.playlist = {
                     type: 'song',
                     songs: [song],
@@ -50,11 +72,22 @@ import toolbar from './Main/Toolbar.vue';
                 };
             },
 
-            playAlbum(songs) {
-                this.playlist = {
+            playAlbum(songs, play) {
+                if (play) {
+                    this.playlistState = 'playlist';
+
+                    return this.playlist = {
+                        type: 'album',
+                        songs: songs,
+                        index: 0
+                    };
+                }
+
+                this.playlistState = 'browsing';
+
+                this.browsing = {
                     type: 'album',
-                    songs: songs,
-                    index: 0
+                    songs: songs
                 };
             }
         }

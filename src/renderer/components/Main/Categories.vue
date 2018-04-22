@@ -13,7 +13,8 @@
             <h5>Albums</h5>
             <div class="items">
                 <div v-for="album in albums" class="item"
-                    @click="selectAlbum(album)">
+                    @click="selectAlbum(album)"
+                    @dblclick="selectAlbum(album, true)">
                     {{ album }}
                 </div>
             </div>
@@ -87,8 +88,10 @@
                 this.selected.artist = artist;
             },
 
-            selectAlbum(album) {
-                this.$emit('playAlbum', this.songs.filter(song => song.album === album))
+            selectAlbum(album, play = false) {
+                let songs = this.songs.filter(song => song.album === album);
+
+                this.$emit('playAlbum', songs, play);
             }
         }
     }
@@ -114,6 +117,7 @@
 
             .items {
                 background: $dark-blue;
+                cursor: pointer;
                 color: $light-blue;
                 height: 300px;
                 min-height: 300px;
