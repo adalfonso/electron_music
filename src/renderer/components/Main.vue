@@ -15,7 +15,9 @@
             @changeState="changePlaylistState">
         </playlist>
 
-        <toolbar :playlist="playlist"></toolbar>
+        <toolbar :playlist="playlist"
+            @next="playNextTrack">
+        </toolbar>
     </div>
 </template>
 
@@ -98,6 +100,14 @@ export default {
                 songs: songs,
                 index: 0
             };
+        },
+
+        playNextTrack() {
+            let pl = this.playlist;
+
+            if (pl.index + 1  < pl.songs.length) {
+                pl.index++;
+            }
         }
     }
 }

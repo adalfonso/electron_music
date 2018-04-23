@@ -1,5 +1,6 @@
 <template>
     <section id="toolbar">
+        <div class="seek" v-if="nowPlaying" :style="seekStyle"></div>
         <h2 class="now-playing" v-if="nowPlaying">
             {{ nowPlaying.artist }} - {{ nowPlaying.title }}
         </h2>
@@ -35,6 +36,13 @@ import Player from '@/../main/lib/player.js';
         },
 
         watch: {
+            ended() {
+                if (this.ended) {
+                    this.player.ended = false;
+                    this.$emit('next');
+                }
+            },
+
             playlist() {
                 if (!this.playlist) {
                     return;
@@ -46,10 +54,14 @@ import Player from '@/../main/lib/player.js';
 
             playlistIndex() {
                 this.player.play(this.filePath);
-            }
+            },
         },
 
         computed: {
+            ended() {
+                return this.player.ended;
+            },
+
             filePath() {
                 if (!this.playlist.songs.length || !this.playlist.songs[this.playlist.index]) {
                     return null;
@@ -64,6 +76,13 @@ import Player from '@/../main/lib/player.js';
 
             playlistIndex() {
                 return this.playlist.index;
+            },
+
+            seekStyle() {
+                let percent = this.player.currentTime / this.player.duration * 100;
+                let style = 'left: calc(' + percent + '% - 1rem);';
+
+                return !percent ? style : style + 'transition: 1s;';
             }
         }
     }
@@ -75,13 +94,14 @@ import Player from '@/../main/lib/player.js';
         border-top: 6px solid $dark-blue-hover;
         height: 150px;
         min-height: 150px;
+        position: relative;
         align-items: center;
         display: flex;
         flex-direction: column;
 
         .now-playing {
             color: $light-blue;
-            margin: .5rem 0 .75rem 0;
+            margin: .5rem 0 0 0;
             text-align: center;
         }
 
@@ -95,6 +115,7 @@ import Player from '@/../main/lib/player.js';
             display: flex;
             height: 5rem;
             justify-content: center;
+            margin-top: .75rem;
             width: 5rem;
 
             .play {
@@ -124,6 +145,16 @@ import Player from '@/../main/lib/player.js';
                 .play { border-left-color: $dark-blue-hover; }
                 .pause div { background: $dark-blue-hover; }
             }
+        }
+
+        .seek {
+            background: $light-blue;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: calc(-.5rem - 3px);
         }
     }
 </style>

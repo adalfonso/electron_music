@@ -3,7 +3,9 @@ class Player {
     constructor(elem = null) {
         this.audio = new Audio();
         this.playing = false;
-        this.playlist = [];
+        this.currentTime = 0;
+        this.duration = 0;
+        this.ended = false;
 
         this.audio.addEventListener('pause', () => {
             this.pause();
@@ -11,6 +13,20 @@ class Player {
 
         this.audio.addEventListener('play', () => {
             this.play();
+            this.ended = false;
+            this.duration = this.audio.duration;
+        });
+
+        this.audio.addEventListener('timeupdate', () => {
+            this.currentTime = this.audio.currentTime;
+        });
+
+        this.audio.addEventListener('loadedmetadata', () => {
+            this.duration = this.audio.duration;
+        });
+
+        this.audio.addEventListener('ended', () => {
+            this.ended = true;
         });
     }
 
@@ -39,10 +55,6 @@ class Player {
         }
 
         this.playing ? this.pause() : this.play();
-    }
-
-    setPlaylist() {
-
     }
 }
 
