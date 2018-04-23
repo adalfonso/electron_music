@@ -89,14 +89,20 @@
                 this.selected.artist = artist;
 
                 if (play) {
-                    let songs = this.songs.filter(song => song.artist === artist);
+                    let songs = this.$collect(this.songs)
+                        .filter(song => song.artist === artist)
+                        .sortBy(song => song.album + song.track)
+                        .use();
 
                     this.$emit('playArtist', songs);
                 }
             },
 
             selectAlbum(album, play = false) {
-                let songs = this.songs.filter(song => song.album === album);
+                let songs = this.$collect(this.songs)
+                    .filter(song => song.album === album)
+                    .sortBy('track')
+                    .use();
 
                 this.$emit('playAlbum', songs, play);
             }
