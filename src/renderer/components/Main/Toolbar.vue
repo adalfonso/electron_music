@@ -1,9 +1,19 @@
 <template>
     <section id="toolbar">
-        <div class="seek" v-if="nowPlaying" :style="seekStyle"></div>
-        <h2 class="now-playing" v-if="nowPlaying">
-            {{ nowPlaying.artist }} - {{ nowPlaying.title }}
-        </h2>
+        <section v-if="nowPlaying">
+            <h2 class="now-playing">
+                {{ nowPlaying.artist }} - {{ nowPlaying.title }}
+            </h2>
+
+            <div class="time">
+                <div class="current">{{ currentTime }}</div>
+                <div class="duration">{{ duration }}</div>
+            </div>
+
+            <div class="seeker" v-if="nowPlaying">
+                <div class="seekbar" :style="seekStyle"></div>
+            </div>
+        </section>
 
         <div class="play-control" @click="player.toggle()">
             <div v-if="player.playing" class="pause">
@@ -58,6 +68,14 @@ import Player from '@/../main/lib/player.js';
         },
 
         computed: {
+            currentTime() {
+                return this.minutify(this.player.currentTime);
+            },
+
+            duration() {
+                return this.minutify(this.player.duration);
+            },
+
             ended() {
                 return this.player.ended;
             },
@@ -79,10 +97,17 @@ import Player from '@/../main/lib/player.js';
             },
 
             seekStyle() {
-                let percent = this.player.currentTime / this.player.duration * 100;
-                let style = 'left: calc(' + percent + '% - 1rem);';
+                let percent = 100 - (this.player.currentTime / this.player.duration * 100);
 
-                return !percent ? style : style + 'transition: 1s;';
+                return 'width:' + percent + '%';
+            }
+        },
+
+        methods: {
+            minutify(time) {
+                let minutes = parseInt(Math.floor(time / 60));
+                let seconds =  Math.round(time - minutes * 60);
+                return minutes + ':' + seconds.toString().padStart(2, '0');
             }
         }
     }
@@ -113,10 +138,10 @@ import Player from '@/../main/lib/player.js';
             border-radius: 50%;
             cursor: pointer;
             display: flex;
-            height: 5rem;
+            height: 4rem;
             justify-content: center;
-            margin-top: .75rem;
-            width: 5rem;
+            margin-top: 1rem;
+            width: 4rem;
 
             .play {
                 border-bottom: 1rem solid transparent;
@@ -132,7 +157,7 @@ import Player from '@/../main/lib/player.js';
 
                 div {
                     background: $dark-blue;
-                    height: 2.25rem;
+                    height: 2rem;
                     margin: .25rem;
                     width: .5rem;
                 }
@@ -147,14 +172,26 @@ import Player from '@/../main/lib/player.js';
             }
         }
 
-        .seek {
+        .time {
+            color: $light-blue;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .seeker {
             background: $light-blue;
-            height: 1rem;
-            width: 1rem;
-            border-radius: 50%;
-            position: absolute;
-            left: 0;
-            top: calc(-.5rem - 3px);
+            display: flex;
+            justify-content: flex-end;
+            height: 2px;
+            width: 30rem;
+            position: relative;
+
+            .seekbar {
+                background: firebrick;
+                bottom: -1px;
+                height: 4px;
+                position: absolute;
+            }
         }
     }
 </style>
