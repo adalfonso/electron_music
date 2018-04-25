@@ -30,6 +30,11 @@ class Player {
         });
     }
 
+    goto(percent) {
+        this.audio.currentTime = percent * this.duration;
+        this.currentTime = this.audio.currentTime;
+    }
+
     load(path) {
         this.audio.src = path;
     }

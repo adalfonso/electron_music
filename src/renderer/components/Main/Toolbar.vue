@@ -1,35 +1,32 @@
 <template>
     <section id="toolbar">
-        <section v-if="nowPlaying">
+        <template v-show="nowPlaying">
             <h2 class="now-playing">
-                {{ nowPlaying.artist }} - {{ nowPlaying.title }}
+                <template v-if="nowPlaying">
+                    {{ nowPlaying.artist }} - {{ nowPlaying.title }}
+                </template>
+                <template v-else>N / A</template>
             </h2>
 
-            <div class="time">
-                <div class="current">{{ currentTime }}</div>
-                <div class="duration">{{ duration }}</div>
-            </div>
+            <seekbar :player="player"></seekbar>
 
-            <div class="seeker" v-if="nowPlaying">
-                <div class="seekbar" :style="seekStyle"></div>
+            <div class="play-control" @click="player.audio.src ? player.toggle() : null">
+                <div v-if="player.playing" class="pause">
+                    <div></div><div></div>
+                </div>
+                <div v-else class="play"></div>
             </div>
-        </section>
-
-        <div class="play-control" @click="player.toggle()">
-            <div v-if="player.playing" class="pause">
-                <div></div><div></div>
-            </div>
-            <div v-else class="play"></div>
-        </div>
-
+        </template>
     </section>
 </template>
 
 <script>
 
 import Player from '@/../main/lib/player.js';
+import seekbar from './Toolbar/Seekbar.vue';
 
-    export default {
+export default {
+    components : { seekbar },
         props: {
             playlist: {
                 default: {
@@ -40,9 +37,7 @@ import Player from '@/../main/lib/player.js';
         },
 
         data() {
-            return {
-                player: new Player
-            }
+            return { player: new Player }
         },
 
         watch: {
@@ -64,18 +59,10 @@ import Player from '@/../main/lib/player.js';
 
             playlistIndex() {
                 this.player.play(this.filePath);
-            },
+            }
         },
 
         computed: {
-            currentTime() {
-                return this.minutify(this.player.currentTime);
-            },
-
-            duration() {
-                return this.minutify(this.player.duration);
-            },
-
             ended() {
                 return this.player.ended;
             },
@@ -94,20 +81,6 @@ import Player from '@/../main/lib/player.js';
 
             playlistIndex() {
                 return this.playlist.index;
-            },
-
-            seekStyle() {
-                let percent = 100 - (this.player.currentTime / this.player.duration * 100);
-
-                return 'width:' + percent + '%';
-            }
-        },
-
-        methods: {
-            minutify(time) {
-                let minutes = parseInt(Math.floor(time / 60));
-                let seconds =  Math.round(time - minutes * 60);
-                return minutes + ':' + seconds.toString().padStart(2, '0');
             }
         }
     }
@@ -127,7 +100,9 @@ import Player from '@/../main/lib/player.js';
         .now-playing {
             color: $light-blue;
             margin: .5rem 0 0 0;
+            max-height: 1.5rem;
             text-align: center;
+            user-select: none;
         }
 
         .player { display: none; }
@@ -169,28 +144,6 @@ import Player from '@/../main/lib/player.js';
 
                 .play { border-left-color: $dark-blue-hover; }
                 .pause div { background: $dark-blue-hover; }
-            }
-        }
-
-        .time {
-            color: $light-blue;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .seeker {
-            background: $light-blue;
-            display: flex;
-            justify-content: flex-end;
-            height: 2px;
-            width: 30rem;
-            position: relative;
-
-            .seekbar {
-                background: firebrick;
-                bottom: -1px;
-                height: 4px;
-                position: absolute;
             }
         }
     }
