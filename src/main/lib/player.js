@@ -1,12 +1,12 @@
 class Player {
 
-    constructor(elem = null) {
+    constructor(playlist = null) {
         this.audio = new Audio();
         this.playing = false;
         this.currentTime = 0;
         this.duration = 0;
         this.ended = false;
-        this.playlist = [];
+        this.playlist = playlist;
 
         this.audio.addEventListener('play', () => {
             this.play();
