@@ -1,22 +1,42 @@
 <template>
-    <div id="play-control">
-        <div class="previous" @click="player.previous()">
-            <div></div>
-            <div></div>
-        </div>
+    <div id="play-controls">
+        <section class="other-options">
 
-        <div class="play-button" @click="player.toggle()">
-            <div v-if="player.playing" class="pause">
-                <div></div><div></div>
+        </section>
+
+        <section class="play-options">
+            <div class="previous" @click="player.previous()">
+                <div></div>
+                <div></div>
             </div>
 
-            <div v-else class="play"></div>
-        </div>
+            <div class="play-button" @click="player.toggle()">
+                <div v-if="player.playing" class="pause">
+                    <div></div><div></div>
+                </div>
 
-        <div class="next" @click="player.next()">
-            <div></div>
-            <div></div>
-        </div>
+                <div v-else class="play"></div>
+            </div>
+
+            <div class="next" @click="player.next()">
+                <div></div>
+                <div></div>
+            </div>
+        </section>
+
+        <section class="volume-wrap">
+            <div class="volume-control">
+                <div class="volumeBar" :style="style"></div>
+                <div class="phantom-volumeBar"
+                    ref="phantomVolumeBar"
+                    @mousemove="move"
+                    @mousedown="selectVolume"
+                    @mouseleave="releaseVolume"
+                    @mouseup="releaseVolume">
+                </div>
+            </div>
+        </section>
+
     </div>
 </template>
 
@@ -25,15 +45,79 @@
 export default {
     props: {
         player: { required: true }
+    },
+
+    data() {
+        return {
+            adjustingVolume: false,
+            currentX: 0
+        }
+    },
+
+    computed: {
+        style() {
+            let volume = this.adjustingVolume
+                ? this.currentX / this.$refs.phantomVolumeBar.clientWidth
+                : this.player.volume;
+
+            return 'width:' + volume * 100 + '%';
+        }
+    },
+
+    methods: {
+        move(event) {
+            this.currentX = event.offsetX;
+
+            if (this.adjustingVolume) {
+                let percent = Math.min(event.offsetX) /
+                    this.$refs.phantomVolumeBar.clientWidth;
+
+                this.player.adjustVolume(percent);
+            }
+        },
+
+        selectVolume(event) {
+            this.adjustingVolume = true;
+        },
+
+        releaseVolume(event) {
+            if (!this.adjustingVolume) {
+                return;
+            }
+
+            let percent = Math.min(event.offsetX) /
+                this.$refs.phantomVolumeBar.clientWidth;
+
+            this.player.adjustVolume(percent);
+
+            this.adjustingVolume = false;
+        }
     }
 }
 </script>
 
 <style lang="scss">
-    #play-control {
+
+    #play-controls {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .other-options {
+        flex-grow: 1;
+        flex-basis: 0;
+    }
+
+    .play-options {
         display: flex;
         align-items: center;
+        align-self: center;
         margin-top: 1rem;
+        justify-content: center;
+        flex-grow: 1;
+        flex-basis: 0;
 
         .previous, .next {
             display: flex;
@@ -73,8 +157,8 @@ export default {
             cursor: pointer;
             display: flex;
             height: 4rem;
-            margin: 0 1rem;
             justify-content: center;
+            margin: 0 1rem;
             width: 4rem;
 
             .play {
@@ -103,6 +187,39 @@ export default {
 
                 .play { border-left-color: $dark-blue-hover; }
                 .pause div { background: $dark-blue-hover; }
+            }
+        }
+    }
+
+    .volume-wrap {
+        align-self: flex-end;
+        display: flex;
+        flex-basis: 0;
+        flex-grow: 1;
+        justify-content: flex-end;
+
+        .volume-control {
+            border: 1px solid $light-blue;
+            display: flex;
+            height: 6px;
+            position: relative;
+            margin: .5rem 1rem;
+            width: 10rem;
+
+            .volumeBar {
+                background: $light-blue;
+                height: 100%;
+                position: absolute;
+            }
+
+            .phantom-volumeBar {
+                bottom: -1rem;
+                cursor: pointer;
+                left: 0;
+                position: absolute;
+                right: 0;
+                top: -1rem;
+                z-index: 15;
             }
         }
     }

@@ -5,6 +5,7 @@ class Player {
         this.playing = false;
         this.currentTime = 0;
         this.duration = 0;
+        this.volume = 1;
         this.ended = false;
         this.playlist = playlist;
 
@@ -103,6 +104,12 @@ class Player {
         let index = this.playlist.index;
 
         this.playlist.index = index + 1 >= this.playlist.songs.length ? 0 : index + 1;
+    }
+
+    adjustVolume(volume = 1) {
+        volume = Math.min(1, Math.max(0, volume));
+        this.audio.volume = volume;
+        this.volume = volume;
     }
 
     filePath() {
