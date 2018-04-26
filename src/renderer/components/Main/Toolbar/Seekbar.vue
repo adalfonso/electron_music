@@ -1,8 +1,8 @@
 <template>
     <section class="seekbar-wrap">
         <div class="time">
-            <div class="current">{{ currentTime }}</div>
-            <div class="duration">{{ duration }}</div>
+            <div class="current" v-show="player.currentTime">{{ currentTime }}</div>
+            <div class="duration" v-show="player.duration">{{ duration }}</div>
         </div>
 
         <div class="seeker">
@@ -77,7 +77,7 @@
                 let percent = Math.min(event.offsetX) /
                     this.$refs.phantomSeekbar.clientWidth;
 
-                this.player.goto(percent);
+                this.player.goTo(percent);
 
                 this.seeking = false;
             }
@@ -97,6 +97,7 @@
         justify-content: space-between;
         margin:.5rem;
         user-select: none;
+        height: 1.25rem;
     }
 
     .seeker {
