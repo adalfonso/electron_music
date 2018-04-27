@@ -14,9 +14,10 @@
             <h5>Albums</h5>
             <div class="items">
                 <div v-for="album in albums" class="item"
-                    @click="selectAlbum(album)"
-                    @dblclick="selectAlbum(album, true)">
-                    {{ album }}
+                    @click="selectAlbum(album.album)"
+                    @dblclick="selectAlbum(album.album, true)">
+                    {{ album.album === '' ? '[Unknown Album]' : album.album }}
+                    <b class="year" v-if="album.year">[{{ album.year }}]</b>
                 </div>
             </div>
         </div>
@@ -42,6 +43,9 @@
 </template>
 
 <script>
+
+import Collection from '@/../main/lib/Collection.js';
+
     export default {
         data() {
             return {
@@ -57,12 +61,16 @@
         mounted() {
             setTimeout(() => {
                 this.$db.library.find({}, (err, docs) => this.songs = docs);
-            }, 100);
+            }, 0);
         },
 
         computed: {
             artists() {
-                return  [...new Set(this.songs.map(song => song.artist))];
+                return new Collection(this.songs)
+                    .unique('artist')
+                    .map(song => song.artist)
+                    .sort()
+                    .use();
             },
 
             albums() {
@@ -70,13 +78,18 @@
                     ? this.songs.filter(song => song.artist === this.selected.artist)
                     : this.songs;
 
-                return  [...new Set(albums.map(song => song.album))]
-                    .filter(album => album)
-                    .sort();
+                return new Collection(albums)
+                    .unique('album')
+                    .sortBy('album')
+                    .use();
             },
 
             genres() {
-                return  [...new Set(this.songs.map(song => song.genre))];
+                return new Collection(this.songs)
+                    .unique('genre')
+                    .map(song => song.genre)
+                    .sort()
+                    .use();
             }
         },
 
@@ -135,12 +148,17 @@
                 background: $dark-blue;
                 cursor: pointer;
                 color: $light-blue;
+
                 height: 300px;
                 overflow: auto;
                 width: 100%;
 
+                .year { margin-left: .25rem; }
+
                 .item {
                     border-bottom:1px solid $dark-blue;
+                    display: flex;
+                    justify-content: space-between;
                     padding: .2rem .5rem;
 
                     &:hover {

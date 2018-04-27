@@ -63,7 +63,7 @@ class Crawler {
     insert(files) {
         db.library.insert(files.map(file => {
             return {
-                path: file.path.replace(/\\/g, "/") + '/' + file.item,
+                path: file.path.replace(/\\/g, "/"),
                 artist: file.meta.artist[0],
                 album: file.meta.album,
                 duration: file.meta.duration,
