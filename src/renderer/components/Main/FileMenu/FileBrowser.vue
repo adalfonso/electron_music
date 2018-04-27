@@ -5,24 +5,22 @@
 
             <input type="file" webkitdirectory @change="select">
 
-            <p v-if="crawler.active">Crawling {{ crawler.path }}</p>
+            <p v-if="crawler.active && crawler.processing">
+                <b>Crawling: {{ crawler.processing }}</b>
+            </p>
         </section>
     </div>
 </template>
 
 <script>
-    import Crawler from '../../../../main/lib/crawler.js';
+    import Crawler from '../../../../main/lib/Crawler.js';
 
     export default {
         data() {
             return {
                 library: [],
                 lib: this.$db.library,
-
-                crawler: new Crawler({
-                    active: false,
-                    path: null
-                })
+                crawler: new Crawler()
             }
         },
 

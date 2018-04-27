@@ -17,7 +17,7 @@
 
 <script>
 
-import Player from '@/../main/lib/player.js';
+import Player from '@/../main/lib/Player.js';
 import playbackControls from './Toolbar/PlaybackControls.vue';
 import seekbar from './Toolbar/Seekbar.vue';
 

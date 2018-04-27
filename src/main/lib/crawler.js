@@ -1,4 +1,5 @@
 const { dialog } = require('electron').remote;
+const glob = require('glob');
 const fs = require('fs');
 const mm = require('musicmetadata');
 
@@ -6,60 +7,56 @@ import db from '../../renderer/datastore.js';
 
 class Crawler {
     constructor() {
-    //    db.library.remove({}, { multi: true }, (err, numRemoved) => {});
+        this.active = false;
+        this.processed = [];
+        this.files = [];
+        this.processing = null;
+        db.library.remove({}, { multi: true }, (err, numRemoved) => {});
     }
 
     crawl(path = this.path) {
-        fs.readdir(path, (err, dir) => {
+        this.active = true;
 
-            var promises = dir.map(item => {
-                return this.stat(path, item);
-            });
+        const getDirectories = (src, callback) => {
+            glob(path + '/**/*.@(mp3|flac|m4a)', callback);
+        };
 
-            Promise.all(promises).then((items) => {
-                let files = items.filter(item => item.isFile);
-                let folders = items.filter(item => !item.isFile);
+        getDirectories('test', (err, res) => {
+            if (err) {
+                console.log('Error', err);
 
-                if (files.length) {
-                    this.insert(files);
-                }
-
-                if (folders.length) {
-                    folders.forEach(folder => {
-                        this.crawl(folder.path + '/' + folder.item)
-                    });
-                }
-            });
+            } else {
+                this.files = res;
+                this.stream();
+            }
         });
-
-        return true;
     }
 
-    stat(path, item) {
-        return new Promise((resolve) => {
-            let fullPath = path + '/' + item;
+    stream() {
+        if (!this.files.length) {
+            return this.insert(this.processed);
+        }
 
-            fs.stat(fullPath, (err, stats) => {
+        new Promise((resolve) => {
+            let readableStream = fs.createReadStream(this.files[0]);
+            this.processing = this.files[0];
+
+            mm(readableStream, (err, metadata) => {
                 if (err) {
-                    stats = {size: 0, mtime: Date.now()};
+                    throw err;
                 }
 
-                let payload = {
-                    path: path,
-                    item: item,
-                    isFile: stats.isFile()
-                }
-
-                if (!payload.isFile) {
-                    resolve(payload);
-                }
-
-                let metadata = this.metadata(fullPath).then(response => {
-                    payload.meta =   response;
-
-                    resolve(payload);
-                });
+                resolve(metadata);
+                readableStream.close()
             });
+        }).then(item => {
+            this.processed.push({
+                path: this.files[0],
+                meta: item
+            });
+
+            this.files.splice(0,1);
+            this.stream();
         });
     }
 
@@ -76,19 +73,8 @@ class Crawler {
                 year: file.meta.year
             };
         }));
-    }
 
-    metadata(file) {
-        return new Promise((resolve) => {
-            mm(fs.createReadStream(file), (err, metadata) => {
-                if (err) {
-                    throw err;
-                }
-
-                resolve(metadata);
-            });
-        });
-
+        this.active = false;
     }
 }
 
