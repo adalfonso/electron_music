@@ -80,8 +80,8 @@ import moment from 'moment';
         created() {
             window.addEventListener('keyup', event => {
                 switch(event.key) {
-                    case 'ArrowUp': return this.previous();
-                    case 'ArrowDown': return this.next();
+                    case 'ArrowUp': return this.traverseCategory('previous');
+                    case 'ArrowDown': return this.traverseCategory('next');
                     case 'Enter': return this.select();
                     default: this.goToSearch(event);
                 }
@@ -161,10 +161,11 @@ import moment from 'moment';
             },
 
             goTo() {
+                let type = this.selected.last
                 let regex = new RegExp('^' + this.goToTracker.input, 'i');
-                let isAlbum = this.selected.last === 'album';
+                let isAlbum = type === 'album';
 
-                let items = this[this.selected.last + 's']
+                let items = this[type+ 's']
                     .filter(item => regex.test(isAlbum ? item.album : item));
 
                 if (!items.length) {
@@ -174,18 +175,36 @@ import moment from 'moment';
                 let item = items[0];
                 let name =  isAlbum ? item.album : item;
 
-                this.selected[this.selected.last] = name;
+                this.selected[type] = name;
 
-                location.hash = `#${this.selected.last}-${name.replace(/\s/g, '_')}`;
+                location.hash = `#${type}-${name.replace(/\s/g, '_')}`;
                 this.selectMethod(item);
             },
 
-            previous() {
+            traverseCategory(direction) {
+                let type = this.selected.last
+                let item = this.selected[type];
+                let data = this[type + 's'];
 
-            },
+                if (!item) {
+                    return;
+                }
 
-            next() {
+                let index = data
+                    .map((_item, i) => _item === item ? i : null)
+                    .filter(item => item !== null )[0];
 
+                if (direction === 'previous') {
+                    index > 0 ? this.selected[type] = data[index - 1] : null;
+                } else {
+                    index < data.length - 1 ? this.selected[type] = data[index + 1] : null;
+                }
+
+                item = this.selected[type];
+                let name = this.type === 'album' ? item.album : item;
+
+                location.hash = `#${type}-${name.replace(/\s/g, '_')}`;
+                this.selectMethod(item);
             },
 
             select() {

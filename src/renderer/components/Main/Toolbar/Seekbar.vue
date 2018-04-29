@@ -117,7 +117,7 @@
 
         .phantom-seekbar {
             position: absolute;
-            bottom: -2rem;
+            bottom: -1rem;
             top: -2rem;
             left: 0;
             right: 0;
