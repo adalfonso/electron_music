@@ -17,7 +17,7 @@
                     @click="selectAlbum(album.album)"
                     @dblclick="selectAlbum(album.album, true)">
                     {{ album.album === '' ? '[Unknown Album]' : album.album }}
-                    <b class="year" v-if="album.year">[{{ album.year }}]</b>
+                    <b class="stat" v-if="album.year && album.album">[{{ album.year }}]</b>
                 </div>
             </div>
         </div>
@@ -33,9 +33,10 @@
         <div class="category">
             <h5>Media</h5>
             <div class="items">
-                <div v-for="genre in genres" class="item"
-                    @click="selectGenre(genre)">
-                    {{ genre }}
+                <div v-for="medium in media" class="item"
+                    @click="selectGenre(medium)">
+                    {{ medium.type }}
+                    <b class="stat">[{{ medium.percent }}%]</b>
                 </div>
             </div>
         </div>
@@ -89,6 +90,21 @@ import Collection from '@/../main/lib/Collection.js';
                     .unique('genre')
                     .map(song => song.genre)
                     .sort()
+                    .use();
+            },
+
+            media() {
+                let total = this.songs.length;
+
+                return new Collection(this.songs)
+                    .groupBy(song => song.path.match(/.([\w\d]+)$/)[1])
+                    .map((group, key) => {
+                        return {
+                            type: key.toUpperCase(),
+                            count: group.length,
+                            percent: (group.length / total * 100).toFixed(2)
+                        }
+                    }).sortByDesc('count')
                     .use();
             }
         },
@@ -153,7 +169,7 @@ import Collection from '@/../main/lib/Collection.js';
                 overflow: auto;
                 width: 100%;
 
-                .year { margin-left: .25rem; }
+                .stat { margin-left: .25rem; }
 
                 .item {
                     border-bottom:1px solid $dark-blue;
