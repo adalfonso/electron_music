@@ -19,7 +19,7 @@
             <h5>Albums</h5>
             <div class="items" id="category-album">
                 <div v-for="album in albums"
-                    :class="selected.album === album.album ? 'item selected' : 'item'"
+                    :class="selected.album && selected.album.album === album.album ? 'item selected' : 'item'"
                     :id="'album-' + album.album.replace(/\s/g, '_')"
                     @click="selectAlbum(album)"
                     @dblclick="selectAlbum(album, true)">
@@ -66,6 +66,7 @@ import moment from 'moment';
                 selected: {
                     artist: null,
                     album: null,
+                    genre: null,
                     last: null
                 },
 
@@ -77,7 +78,14 @@ import moment from 'moment';
         },
 
         created() {
-            window.addEventListener('keyup', this.goToSearch)
+            window.addEventListener('keyup', event => {
+                switch(event.key) {
+                    case 'ArrowUp': return this.previous();
+                    case 'ArrowDown': return this.next();
+                    case 'Enter': return this.select();
+                    default: this.goToSearch(event);
+                }
+            });
         },
 
         mounted() {
@@ -128,14 +136,16 @@ import moment from 'moment';
                         }
                     }).sortByDesc('count')
                     .use();
+            },
+
+            selectMethod() {
+                let str = this.selected.last;
+
+                return this['select' + str.charAt(0).toUpperCase() + str.slice(1)];
             }
         },
 
         methods: {
-            capitalize(str) {
-                return str.charAt(0).toUpperCase() + str.slice(1);
-            },
-
             goToSearch(event) {
                 let now = moment();
                 this.goToTracker.at.add(1000, 'milliseconds')
@@ -167,7 +177,24 @@ import moment from 'moment';
                 this.selected[this.selected.last] = name;
 
                 location.hash = `#${this.selected.last}-${name.replace(/\s/g, '_')}`;
-                this['select' + this.capitalize(this.selected.last)](item);
+                this.selectMethod(item);
+            },
+
+            previous() {
+
+            },
+
+            next() {
+
+            },
+
+            select() {
+                let item = this.selected[this.selected.last];
+                if (!item) {
+                    return;
+                }
+
+                this.selectMethod(item, true);
             },
 
             play(song) {
@@ -199,7 +226,7 @@ import moment from 'moment';
             },
 
             selectGenre(genre, play = false) {
-                this.selected.album = genre;
+                this.selected.genre = genre;
                 this.selected.last = 'genre';
 
                 let songs = this.$collect(this.songs)
@@ -254,6 +281,7 @@ import moment from 'moment';
                     display: flex;
                     justify-content: space-between;
                     padding: .2rem .5rem;
+                    user-select: none;
 
                     &:hover, &.selected {
                         background: $dark-blue-hover;
