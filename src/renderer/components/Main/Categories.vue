@@ -33,8 +33,7 @@
         <div class="category">
             <h5>Media</h5>
             <div class="items">
-                <div v-for="medium in media" class="item"
-                    @click="selectGenre(medium)">
+                <div v-for="medium in media" class="item">
                     {{ medium.type }}
                     <b class="stat">[{{ medium.percent }}%]</b>
                 </div>
@@ -132,6 +131,19 @@ import Collection from '@/../main/lib/Collection.js';
                     .use();
 
                 this.$emit('playAlbum', songs, play);
+            },
+
+            selectGenre(genre) {
+                let songs = this.$collect(this.songs)
+                    .filter(song => song.genre === genre)
+                    .sortBy(song => {
+                        return song.artist.padEnd(40, '') +
+                        song.album.padEnd(20, '') +
+                        song.track.toString().padStart(3, '0');
+                    })
+                    .use();
+
+                this.$emit('playGenre', songs);
             }
         }
     }
@@ -142,7 +154,7 @@ import Collection from '@/../main/lib/Collection.js';
         border-bottom: 6px solid $dark-blue-hover;
         display: flex;
         justify-content: space-around;
-        min-height: 200px;
+        min-height: 300px;
 
         .category {
             background: $dark-blue-hover;

@@ -70,6 +70,7 @@
 <style lang="scss">
     #playlist {
         background: $dark-blue;
+        position: relative;
         overflow: auto;
         flex: 1 1 auto;
 

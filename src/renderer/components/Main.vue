@@ -4,7 +4,8 @@
 
         <categories @play="play"
             @playAlbum="playAlbum"
-            @playArtist="playArtist">
+            @playArtist="playArtist"
+            @playGenre="playGenre">
         </categories>
 
         <playlist
@@ -107,6 +108,15 @@ export default {
 
             this.browsing = {
                 type: 'artist',
+                songs: songs
+            };
+        },
+
+        playGenre(songs) {
+            this.playlistState = 'browsing';
+
+            this.browsing = {
+                type: 'genre',
                 songs: songs
             };
         },
