@@ -92,13 +92,22 @@ export default {
             };
         },
 
-        playArtist(songs) {
-            this.playlistState = 'playlist';
+        playArtist(songs, play) {
+            if (play) {
+                this.playlistState = 'playlist';
 
-            return this.playlist = {
+                return this.playlist = {
+                    type: 'artist',
+                    songs: songs,
+                    index: 0
+                };
+            }
+
+            this.playlistState = 'browsing';
+
+            this.browsing = {
                 type: 'artist',
-                songs: songs,
-                index: 0
+                songs: songs
             };
         },
 

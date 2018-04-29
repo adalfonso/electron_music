@@ -117,14 +117,12 @@ import Collection from '@/../main/lib/Collection.js';
             selectArtist(artist, play = false) {
                 this.selected.artist = artist;
 
-                if (play) {
-                    let songs = this.$collect(this.songs)
-                        .filter(song => song.artist === artist)
-                        .sortBy(song => song.album + song.track)
-                        .use();
+                let songs = this.$collect(this.songs)
+                    .filter(song => song.artist === artist)
+                    .sortBy(song => song.album + song.track)
+                    .use();
 
-                    this.$emit('playArtist', songs);
-                }
+                this.$emit('playArtist', songs, play);
             },
 
             selectAlbum(album, play = false) {
