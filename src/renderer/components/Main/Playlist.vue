@@ -18,6 +18,7 @@
                 <th>Track</th>
             </tr>
             <tr v-for="(song, index) in songs"
+                :class="state === 'playlist' && index === playlist.index ? 'selected' : ''"
                 @click="changePlaylistIndex(index)">
                 <td>{{ song.artist }}</td>
                 <td>{{ song.album }}</td>
@@ -85,10 +86,14 @@
             width: 100%;
 
             td, th { padding:.2rem .5rem; }
-            tr { cursor: pointer; }
 
-            tr:hover td {
-                background: $dark-blue-hover;
+            tr {
+                cursor: pointer;
+                user-select: none;
+
+                &:hover, &.selected {
+                    td { background: $dark-blue-hover; }
+                }
             }
         }
     }
