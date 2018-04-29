@@ -22,7 +22,10 @@
                 <td>{{ song.artist }}</td>
                 <td>{{ song.album }}</td>
                 <td>{{ song.year }}</td>
-                <td>{{ song.title }}</td>
+                <td>
+                    {{ song.title.substring(0, 50).trim() }}
+                    {{ song.title.length > 50 ? '...' : '' }}
+                </td>
                 <td>{{ song.track }}</td>
             </tr>
         </table>

@@ -3,9 +3,7 @@
         <fileMenu></fileMenu>
 
         <categories @play="play"
-            @playAlbum="playAlbum"
-            @playArtist="playArtist"
-            @playGenre="playGenre">
+            @playCategory="playCategory">
         </categories>
 
         <playlist
@@ -74,12 +72,12 @@ export default {
             };
         },
 
-        playAlbum(songs, play) {
+        playCategory(type, songs, play) {
             if (play) {
                 this.playlistState = 'playlist';
 
                 return this.playlist = {
-                    type: 'album',
+                    type: type,
                     songs: songs,
                     index: 0
                 };
@@ -88,35 +86,7 @@ export default {
             this.playlistState = 'browsing';
 
             this.browsing = {
-                type: 'album',
-                songs: songs
-            };
-        },
-
-        playArtist(songs, play) {
-            if (play) {
-                this.playlistState = 'playlist';
-
-                return this.playlist = {
-                    type: 'artist',
-                    songs: songs,
-                    index: 0
-                };
-            }
-
-            this.playlistState = 'browsing';
-
-            this.browsing = {
-                type: 'artist',
-                songs: songs
-            };
-        },
-
-        playGenre(songs) {
-            this.playlistState = 'browsing';
-
-            this.browsing = {
-                type: 'genre',
+                type: type,
                 songs: songs
             };
         },
