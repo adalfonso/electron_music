@@ -90,6 +90,7 @@ export default {
         align-items: center;
         display: flex;
         flex-direction: column;
+        flex: 0 0 auto;
 
         .now-playing {
             color: $light-blue;

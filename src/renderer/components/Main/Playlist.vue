@@ -9,27 +9,29 @@
                 </div>
             </div>
         </section>
-        <table class="playlist">
-            <tr>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>Year</th>
-                <th>Title</th>
-                <th>Track</th>
-            </tr>
-            <tr v-for="(song, index) in songs"
-                :class="state === 'playlist' && index === playlist.index ? 'selected' : ''"
-                @click="changePlaylistIndex(index)">
-                <td>{{ song.artist }}</td>
-                <td>{{ song.album }}</td>
-                <td>{{ song.year }}</td>
-                <td>
-                    {{ song.title.substring(0, 50).trim() }}
-                    {{ song.title.length > 50 ? '...' : '' }}
-                </td>
-                <td>{{ song.track }}</td>
-            </tr>
-        </table>
+        <div class="playlist-wrap">
+            <table class="playlist">
+                <tr>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>Year</th>
+                    <th>Title</th>
+                    <th>Track</th>
+                </tr>
+                <tr v-for="(song, index) in songs"
+                    :class="state === 'playlist' && index === playlist.index ? 'selected' : ''"
+                    @click="changePlaylistIndex(index)">
+                    <td>{{ song.artist }}</td>
+                    <td>{{ song.album }}</td>
+                    <td>{{ song.year }}</td>
+                    <td>
+                        {{ song.title.substring(0, 50).trim() }}
+                        {{ song.title.length > 50 ? '...' : '' }}
+                    </td>
+                    <td>{{ song.track }}</td>
+                </tr>
+            </table>
+        </div>
     </section>
 </template>
 
@@ -75,10 +77,20 @@
     #playlist {
         background: $dark-blue;
         position: relative;
-        overflow: auto;
+        display: flex;
+        flex-direction: column;
         flex: 1 1 auto;
 
-        .options { padding: .5rem; }
+        .options {
+            border-bottom: 6px solid $dark-blue-hover;
+            padding: .5rem;
+            flex: 0 0 auto;
+        }
+
+        .playlist-wrap {
+            flex: 1 1 auto;
+            overflow: auto;
+        }
 
         .playlist {
             color: $light-blue;

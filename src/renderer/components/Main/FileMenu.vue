@@ -48,6 +48,7 @@
         font-weight: 300;
         height: 2rem;
         min-height: 2rem;
+        flex: 0 0 auto;
 
         .menu-item {
             line-height: 1rem;

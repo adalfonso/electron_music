@@ -14,8 +14,7 @@
                     {{ artist }}
                 </div>
             </div>
-        </div>
-        <div class="category">
+        </div>        <div class="category">
             <h5>Albums</h5>
             <div class="items" id="category-album">
                 <div v-for="album in albums"
@@ -269,6 +268,7 @@ import moment from 'moment';
         display: flex;
         justify-content: space-around;
         min-height: 300px;
+        flex: 0 0 auto;
 
         .category {
             background: $dark-blue-hover;
@@ -290,7 +290,7 @@ import moment from 'moment';
                 color: $light-blue;
 
                 height: 300px;
-                overflow: auto;
+                overflow-y: scroll;
                 width: 100%;
 
                 .stat { margin-left: .25rem; }
