@@ -2,20 +2,13 @@
     <div id="wrap">
         <fileMenu></fileMenu>
 
-        <categories @play="play"
-            @playCategory="playCategory">
+        <categories :player="player">
         </categories>
 
-        <playlist
-            :playlist="playlist"
-            :browsing="browsing"
-            :state="playlistState"
-            @changePlaylistIndex="changePlaylistIndex"
-            @changeState="changePlaylistState">
+        <playlist :player="player">
         </playlist>
 
-        <toolbar :playlist="playlist"
-            @next="playNextTrack">
+        <toolbar :player="player">
         </toolbar>
     </div>
 </template>
@@ -26,77 +19,14 @@ import fileMenu from './Main/FileMenu.vue';
 import categories from './Main/Categories.vue';
 import playlist from './Main/Playlist.vue';
 import toolbar from './Main/Toolbar.vue';
+import Player from '@/../main/lib/Player.js';
 
 export default {
     components : { fileMenu, categories, playlist, toolbar },
 
     data() {
         return {
-            browsing: {
-                type: 'none',
-                songs: []
-            },
-
-            playlist: {
-                type: 'none',
-                songs: [],
-                index: 0
-            },
-
-            playlistState: 'browsing'
-        }
-    },
-
-    methods: {
-        changePlaylistIndex(index) {
-            if (this.playlistState === 'browsing') {
-                this.playlistState = 'playlist';
-                this.playlist.type = this.browsing.type;
-                this.playlist.songs = this.browsing.songs;
-                return this.playlist.index = index;
-            }
-
-            this.playlist.index = index;
-        },
-
-        changePlaylistState(state) {
-            this.playlistState = state;
-        },
-
-        play(song) {
-            this.playlistState = 'playlist';
-            this.playlist = {
-                type: 'song',
-                songs: [song],
-                index: 0
-            };
-        },
-
-        playCategory(type, songs, play) {
-            if (play) {
-                this.playlistState = 'playlist';
-
-                return this.playlist = {
-                    type: type,
-                    songs: songs,
-                    index: 0
-                };
-            }
-
-            this.playlistState = 'browsing';
-
-            this.browsing = {
-                type: type,
-                songs: songs
-            };
-        },
-
-        playNextTrack() {
-            let pl = this.playlist;
-
-            if (pl.index + 1  < pl.songs.length) {
-                pl.index++;
-            }
+            player: new Player()
         }
     }
 }

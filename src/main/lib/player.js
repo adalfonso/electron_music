@@ -1,17 +1,17 @@
+import Playlist from "./Playlist.js";
+
 class Player {
 
-    constructor(playlist = null) {
+    constructor(playlist = []) {
         this.audio = new Audio();
         this.playing = false;
         this.currentTime = 0;
         this.duration = 0;
         this.volume = 1;
-        this.ended = false;
-        this.playlist = playlist;
+        this.playlist = new Playlist (playlist);
 
         this.audio.addEventListener('play', () => {
-            this.play();
-            this.ended = false;
+            this.playing = true;
             this.duration = this.audio.duration;
         });
 
@@ -24,7 +24,8 @@ class Player {
         });
 
         this.audio.addEventListener('ended', () => {
-            this.ended = true;
+            this.playing = false;
+            this.next();
         });
     }
 
@@ -33,18 +34,14 @@ class Player {
         this.currentTime = this.audio.currentTime;
     }
 
-    load(path) {
+    load(path, audio = this.audio) {
         if (this.playing) {
             this.pause();
         }
 
-        this.audio.src = path;
+        audio.src = path;
 
         return this;
-    }
-
-    reload() {
-        return this.load(this.filePath());
     }
 
     play(path = null) {
@@ -52,18 +49,24 @@ class Player {
             this.load(path);
         }
 
-        this.playing = true;
-
         return this.audio.play();
     }
 
     changeIndex(index = 0) {
-        if (index >= this.playlist.songs.length) {
-            return;
-        }
+        this.playlist.change(index);
+        return this.play(this.playlist.currentFile());
+    }
 
-        this.playlist.index = index;
-        return this.reload();
+    changePlaylist(list, play = false) {
+        if (play) {
+            this.playlist.state = 'playlist';
+            this.playlist.list = list;
+            this.playlist.index = 0;
+            this.play(this.playlist.currentFile());
+        } else {
+            this.playlist.state = 'browsing';
+            this.playlist.browsing = list;
+        }
     }
 
     pause() {
@@ -87,23 +90,17 @@ class Player {
     }
 
     previous() {
-        if (!this.playlist.songs.length) {
-            return;
+        if (this.playlist.hasPrevious()) {
+            this.playlist.previous();
+            this.play(this.playlist.currentFile());
         }
-
-        let index = this.playlist.index;
-
-        this.playlist.index = index - 1 < 0 ? this.playlist.songs.length - 1 : index - 1;
     }
 
     next() {
-        if (!this.playlist.songs.length) {
-            return;
+        if (this.playlist.hasNext()) {
+            this.playlist.next();
+            this.play(this.playlist.currentFile());
         }
-
-        let index = this.playlist.index;
-
-        this.playlist.index = index + 1 >= this.playlist.songs.length ? 0 : index + 1;
     }
 
     adjustVolume(volume = 1) {
@@ -111,18 +108,6 @@ class Player {
         this.audio.volume = volume;
         this.volume = volume;
     }
-
-    filePath() {
-        let playlistIsEmpty = !this.playlist.songs.length;
-        let songIsMissing = !this.playlist.songs[this.playlist.index];
-
-        if (playlistIsEmpty || songIsMissing) {
-            return null;
-        }
-
-        return 'file://' + this.playlist.songs[this.playlist.index].path;
-    }
-
 }
 
 export default Player;

@@ -17,67 +17,22 @@
 
 <script>
 
-import Player from '@/../main/lib/Player.js';
 import playbackControls from './Toolbar/PlaybackControls.vue';
 import seekbar from './Toolbar/Seekbar.vue';
 
 export default {
     components : { playbackControls, seekbar },
-        props: {
-            playlist: {
-                default: {
-                    type: 'none',
-                    songs: []
-                }
-            }
-        },
 
-        data() {
-            return { player: new Player(this.playlist) }
-        },
+    props: {
+        player: { required: true }
+    },
 
-        watch: {
-            ended() {
-                if (this.ended) {
-                    this.player.ended = false;
-                    this.$emit('next');
-                }
-            },
-
-            playlist() {
-                if (!this.playlist) {
-                    return;
-                }
-
-                this.player.playlist = this.playlist;
-
-                this.player.changeIndex().play();
-
-            },
-
-            playlistIndex(index) {
-                if (!this.playlist.songs.length) {
-                    return;
-                }
-
-                this.player.changeIndex(index).play();
-            }
-        },
-
-        computed: {
-            ended() {
-                return this.player.ended;
-            },
-
-            nowPlaying() {
-                return this.playlist.songs[this.playlist.index];
-            },
-
-            playlistIndex() {
-                return this.playlist.index;
-            }
+    computed: {
+        nowPlaying() {
+            return this.player.playlist.nowPlaying();
         }
     }
+}
 </script>
 
 <style lang="scss">

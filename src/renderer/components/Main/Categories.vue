@@ -57,9 +57,15 @@ import Collection from '@/../main/lib/Collection.js';
 import moment from 'moment';
 
     export default {
+
+        props: {
+            player: { required: true }
+        },
+
         data() {
             return {
                 categories: ['Artists', 'Albums', 'Genres', 'Media'],
+
                 songs: [],
 
                 selected: {
@@ -215,10 +221,6 @@ import moment from 'moment';
                 this.selectMethod(item, true);
             },
 
-            play(song) {
-                this.$emit('play', song);
-            },
-
             selectArtist(artist, play = false) {
                 this.selected.artist = artist;
                 this.selected.last = 'artist';
@@ -228,7 +230,7 @@ import moment from 'moment';
                     .sortBy(song => song.album + song.track)
                     .use();
 
-                this.$emit('playCategory', 'artist', songs, play);
+                this.player.changePlaylist(songs, play);
             },
 
             selectAlbum(album, play = false) {
@@ -240,7 +242,7 @@ import moment from 'moment';
                     .sortBy('track')
                     .use();
 
-                this.$emit('playCategory', 'album', songs, play);
+                this.player.changePlaylist(songs, play);
             },
 
             selectGenre(genre, play = false) {
@@ -256,7 +258,7 @@ import moment from 'moment';
                     })
                     .use();
 
-                this.$emit('playCategory', 'genre', songs, play);
+                this.player.changePlaylist(songs, play);
             }
         }
     }

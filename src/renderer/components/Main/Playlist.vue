@@ -2,10 +2,10 @@
     <section id="playlist">
         <section class="options">
             <div class="ui-button-set capitalize">
-                <div v-for="stateOption in states"
-                    :class="stateOption === state ? 'selected' : ''"
-                    @click="changeState(stateOption)">
-                    {{ stateOption }}
+                <div v-for="s in states"
+                    :class="s === state ? 'selected' : ''"
+                    @click="playlist.state = state">
+                    {{ s }}
                 </div>
             </div>
         </section>
@@ -19,8 +19,8 @@
                     <th>Track</th>
                 </tr>
                 <tr v-for="(song, index) in songs"
-                    :class="state === 'playlist' && index === playlist.index ? 'selected' : ''"
-                    @click="changePlaylistIndex(index)">
+                    :class="indexClass(index)"
+                    @click="player.changeIndex(index)">
                     <td>{{ song.artist }}</td>
                     <td>{{ song.album }}</td>
                     <td>{{ song.year }}</td>
@@ -38,13 +38,7 @@
 <script>
     export default {
         props: {
-            playlist: {
-                default: { type: 'none', songs: [] }
-            },
-
-            browsing: { default: [] },
-
-            state: { default: 'browsing' }
+            player: { required: true }
         },
 
         data() {
@@ -55,19 +49,25 @@
 
         computed: {
             songs() {
-                return this[this.state].songs;
+                return this.state === 'browsing'
+                    ? this.player.playlist.browsing
+                    : this.player.playlist.list;
+            },
+
+            state () {
+                return this.player.playlist.state;
+            },
+
+            playlist() {
+                return this.player.playlist;
             }
         },
 
         methods: {
-            changePlaylistIndex(index) {
-                this.$emit('changePlaylistIndex', index);
-            },
-
-            changeState(state) {
-                if (state !== this.state) {
-                    this.$emit('changeState', state);
-                }
+            indexClass(index) {
+                return this.playlist.state === 'playlist' &&
+                    index === this.playlist.index
+                        ? 'selected' : ''
             }
         }
     }
