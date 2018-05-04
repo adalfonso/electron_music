@@ -54,6 +54,7 @@ class Player {
 
     changeIndex(index = 0) {
         this.playlist.change(index);
+        this.playlist.state = 'playlist';
         return this.play(this.playlist.currentFile());
     }
 

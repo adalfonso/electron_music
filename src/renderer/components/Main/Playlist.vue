@@ -4,7 +4,7 @@
             <div class="ui-button-set capitalize">
                 <div v-for="s in states"
                     :class="s === state ? 'selected' : ''"
-                    @click="playlist.state = state">
+                    @click="changeState(s)">
                     {{ s }}
                 </div>
             </div>
@@ -64,6 +64,10 @@
         },
 
         methods: {
+            changeState(state) {
+                this.player.playlist.state = state;
+            },
+
             indexClass(index) {
                 return this.playlist.state === 'playlist' &&
                     index === this.playlist.index
@@ -85,6 +89,7 @@
             border-bottom: 6px solid $dark-blue-hover;
             padding: .5rem;
             flex: 0 0 auto;
+            user-select: none;
         }
 
         .playlist-wrap {

@@ -1,44 +1,14 @@
 <template>
     <section id="categories">
-        <div class="category">
-            <h5>Artists</h5>
-            <div class="items" id="category-artist">
-                <div class="item" @click="selected.artist = null">
-                    [All Artists - {{artists.length}}]
-                </div>
-                <div v-for="artist in artists"
-                    :class="selected.artist === artist ? 'item selected' : 'item'"
-                    :id="'artist-' + artist.replace(/\s/g, '_')"
-                    @click="selectArtist(artist)"
-                    @dblclick="selectArtist(artist, true)">
-                    {{ artist }}
-                </div>
-            </div>
-        </div>        <div class="category">
-            <h5>Albums</h5>
-            <div class="items" id="category-album">
-                <div v-for="album in albums"
-                    :class="selected.album && selected.album.album === album.album ? 'item selected' : 'item'"
-                    :id="'album-' + album.album.replace(/\s/g, '_')"
-                    @click="selectAlbum(album)"
-                    @dblclick="selectAlbum(album, true)">
-                    {{ album.album === '' ? '[Unknown Album]' : album.album }}
-                    <b class="stat" v-if="album.year && album.album">[{{ album.year }}]</b>
-                </div>
-            </div>
-        </div>
-        <div class="category">
-            <h5>Genres</h5>
-            <div class="items" id="category-genre">
-                <div v-for="genre in genres"
-                    :class="selected.genre === genre ? 'item selected' : 'item'"
-                    :id="'genre-' + genre.replace(/\s/g, '_')"
-                    @click="selectGenre(genre)"
-                    @dblclick="selectGenre(genre, true)">
-                    {{ genre }}
-                </div>
-            </div>
-        </div>
+        <category v-for="(cat, type) in categories"
+            :type="type"
+            :key="type"
+            :cat="cat"
+            :selected="selected"
+            @select="selectCategory"
+            @reset="selected[type] = null">
+        </category>
+
         <div class="category">
             <h5>Media</h5>
             <div class="items" id="category-media">
@@ -54,9 +24,11 @@
 <script>
 
 import Collection from '@/../main/lib/Collection.js';
-import moment from 'moment';
+import category from './Categories/Section.vue';
 
     export default {
+
+        components: { category },
 
         props: {
             player: { required: true }
@@ -64,8 +36,6 @@ import moment from 'moment';
 
         data() {
             return {
-                categories: ['Artists', 'Albums', 'Genres', 'Media'],
-
                 songs: [],
 
                 selected: {
@@ -73,24 +43,12 @@ import moment from 'moment';
                     album: null,
                     genre: null,
                     last: null
-                },
-
-                goToTracker: {
-                    at: moment(),
-                    input: ''
                 }
             }
         },
 
         created() {
-            window.addEventListener('keyup', event => {
-                switch(event.key) {
-                    case 'ArrowUp': return this.traverseCategory('previous');
-                    case 'ArrowDown': return this.traverseCategory('next');
-                    case 'Enter': return this.select();
-                    default: this.goToSearch(event);
-                }
-            });
+
         },
 
         mounted() {
@@ -100,6 +58,26 @@ import moment from 'moment';
         },
 
         computed: {
+            categories() {
+                return {
+                    artist: {
+                        list: this.artists,
+                        hasDefault: true,
+                        display: item => item
+                    },
+                    album: {
+                        list: this.albums,
+                        hasDefault: true,
+                        display: item => item.album
+                    },
+                    genre: {
+                        list: this.genres,
+                        hasDefault: false,
+                        display: item => item
+                    }
+                }
+            },
+
             artists() {
                 return new Collection(this.songs)
                     .unique('artist')
@@ -114,6 +92,7 @@ import moment from 'moment';
                     : this.songs;
 
                 return new Collection(albums)
+                    .filter(album => album.album)
                     .unique('album')
                     .sortBy('album')
                     .use();
@@ -151,80 +130,13 @@ import moment from 'moment';
         },
 
         methods: {
-            goToSearch(event) {
-                let now = moment();
-                this.goToTracker.at.add(1000, 'milliseconds')
-
-                let newSearch = this.goToTracker.at.isBefore(now);
-
-                this.goToTracker.input = newSearch
-                    ? event.key
-                    : this.goToTracker.input + event.key;
-
-                this.goToTracker.at = now;
-                this.goTo();
-            },
-
-            goTo() {
-                let type = this.selected.last
-                let regex = new RegExp('^' + this.goToTracker.input, 'i');
-                let isAlbum = type === 'album';
-
-                let items = this[type+ 's']
-                    .filter(item => regex.test(isAlbum ? item.album : item));
-
-                if (!items.length) {
-                    return;
-                }
-
-                let item = items[0];
-                let name =  isAlbum ? item.album : item;
-
-                this.selected[type] = name;
-
-                location.hash = `#${type}-${name.replace(/\s/g, '_')}`;
-                this.selectMethod(item);
-            },
-
-            traverseCategory(direction) {
-                let type = this.selected.last
-                let item = this.selected[type];
-                let data = this[type + 's'];
-
-                if (!item) {
-                    return;
-                }
-
-                let index = data
-                    .map((_item, i) => _item === item ? i : null)
-                    .filter(item => item !== null )[0];
-
-                if (direction === 'previous') {
-                    index > 0 ? this.selected[type] = data[index - 1] : null;
-                } else {
-                    index < data.length - 1 ? this.selected[type] = data[index + 1] : null;
-                }
-
-                item = this.selected[type];
-                let name = this.type === 'album' ? item.album : item;
-
-                location.hash = `#${type}-${name.replace(/\s/g, '_')}`;
-                this.selectMethod(item);
-            },
-
-            select() {
-                let item = this.selected[this.selected.last];
-                if (!item) {
-                    return;
-                }
-
-                this.selectMethod(item, true);
+            selectCategory(type, item, play) {
+                this.selected[type] = item;
+                this.selected.last = type;
+                this.selectMethod(item, play);
             },
 
             selectArtist(artist, play = false) {
-                this.selected.artist = artist;
-                this.selected.last = 'artist';
-
                 let songs = this.$collect(this.songs)
                     .filter(song => song.artist === artist)
                     .sortBy(song => song.album + song.track)
@@ -234,9 +146,6 @@ import moment from 'moment';
             },
 
             selectAlbum(album, play = false) {
-                this.selected.album = album;
-                this.selected.last = 'album';
-
                 let songs = this.$collect(this.songs)
                     .filter(song => song.album === album.album && song.year === album.year)
                     .sortBy('track')
@@ -246,9 +155,6 @@ import moment from 'moment';
             },
 
             selectGenre(genre, play = false) {
-                this.selected.genre = genre;
-                this.selected.last = 'genre';
-
                 let songs = this.$collect(this.songs)
                     .filter(song => song.genre === genre)
                     .sortBy(song => {
