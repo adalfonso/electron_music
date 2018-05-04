@@ -22,8 +22,8 @@ import fileMenu from './Main/FileMenu.vue';
 import categories from './Main/Categories.vue';
 import playlist from './Main/Playlist.vue';
 import toolbar from './Main/Toolbar.vue';
-import Player from '@/../main/lib/Player.js';
-import Settings from '@/../main/lib/Settings.js';
+import Player from '@/lib/Player.js';
+import Settings from '@/lib/Settings.js';
 
 export default {
     components : { fileMenu, categories, playlist, toolbar },

@@ -1,4 +1,4 @@
-import DB from '../../renderer/datastore.js';
+import DB from '@/datastore.js';
 
 class Settings {
     constructor() {

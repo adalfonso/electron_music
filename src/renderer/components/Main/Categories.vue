@@ -23,7 +23,7 @@
 
 <script>
 
-import Collection from '@/../main/lib/Collection.js';
+import Collection from '@/lib/Collection.js';
 import category from './Categories/Section.vue';
 
     export default {

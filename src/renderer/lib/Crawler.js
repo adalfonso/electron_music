@@ -3,7 +3,7 @@ const glob = require('glob');
 const fs = require('fs');
 const mm = require('musicmetadata');
 
-import db from '../../renderer/datastore.js';
+import db from '@/datastore.js';
 
 class Crawler {
     constructor() {

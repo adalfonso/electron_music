@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import Crawler from '../../../../main/lib/Crawler.js';
+    import Crawler from '@/lib/Crawler.js';
 
     export default {
         data() {
