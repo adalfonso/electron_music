@@ -35,10 +35,6 @@ class Player {
     }
 
     load(path, audio = this.audio) {
-        if (this.playing) {
-            this.pause();
-        }
-
         audio.src = path;
 
         return this;

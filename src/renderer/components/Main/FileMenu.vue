@@ -1,8 +1,17 @@
 <template>
     <section id="file-menu">
-        <div v-for="group in groups" class="menu-item"
-        @click="browse">
-            {{ group.name }}
+        <div class="menu-item" @click="browse">
+            Library
+        </div>
+
+        <div class="menu-item">
+            Settings
+            <ul class="settings">
+                <li @click="settings.toggle('compilationArtists')">
+                    <span v-if="settings.has('compilationArtists')">&#10004;</span>
+                    Show all artists on compilations
+                </li>
+            </ul>
         </div>
 
         <file-browser
@@ -16,19 +25,15 @@
     import fileBrowser from './FileMenu/FileBrowser.vue';
 
     export default {
-        components : {
-            fileBrowser
+        components : { fileBrowser },
+
+        props: {
+            settings: { required: true }
         },
 
         data() {
             return {
-                browsing: false,
-
-                groups: [
-                    {
-                        name: 'Library'
-                    }
-                ]
+                browsing: false
             }
         },
 
@@ -54,10 +59,45 @@
             line-height: 1rem;
             padding: .5rem;
             transition: .2s;
+            position: relative;
+            user-select: none;
 
             &:hover {
                 background: $med-blue;
                 color: $light-blue;
+
+                > * { display: block; }
+            }
+        }
+
+        .settings {
+            background: $med-blue;
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color : white;
+            left: 0;
+            position: absolute;
+            top: 100%;
+            border-top-right-radius: .25rem;
+            border-bottom-right-radius: .25rem;
+            border-bottom-left-radius: .25rem;
+
+            li {
+                padding: .5rem;
+                white-space: nowrap;
+
+                &:hover { background: $med-blue-hover; }
+
+                &:first-of-type {
+                    border-top-right-radius: .25rem;
+                }
+
+                &:last-of-type {
+                    border-bottom-right-radius: .25rem;
+                    border-bottom-left-radius: .25rem;
+                }
             }
         }
     }

@@ -1,8 +1,11 @@
 <template>
     <div id="wrap">
-        <fileMenu></fileMenu>
+        <fileMenu :settings="settings">
+        </fileMenu>
 
-        <categories :player="player">
+        <categories
+            :player="player"
+            :settings="settings">
         </categories>
 
         <playlist :player="player">
@@ -20,13 +23,15 @@ import categories from './Main/Categories.vue';
 import playlist from './Main/Playlist.vue';
 import toolbar from './Main/Toolbar.vue';
 import Player from '@/../main/lib/Player.js';
+import Settings from '@/../main/lib/Settings.js';
 
 export default {
     components : { fileMenu, categories, playlist, toolbar },
 
     data() {
         return {
-            player: new Player()
+            player: new Player(),
+            settings: new Settings()
         }
     }
 }

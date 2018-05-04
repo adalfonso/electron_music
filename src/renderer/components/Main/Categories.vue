@@ -31,7 +31,8 @@ import category from './Categories/Section.vue';
         components: { category },
 
         props: {
-            player: { required: true }
+            player: { required: true },
+            settings: { required: true }
         },
 
         data() {
@@ -45,10 +46,6 @@ import category from './Categories/Section.vue';
                     last: null
                 }
             }
-        },
-
-        created() {
-
         },
 
         mounted() {
@@ -68,7 +65,7 @@ import category from './Categories/Section.vue';
                     album: {
                         list: this.albums,
                         hasDefault: true,
-                        display: item => item.album
+                        display: item => item.album ? item.album: '[Unknown Album]'
                     },
                     genre: {
                         list: this.genres,
@@ -92,7 +89,6 @@ import category from './Categories/Section.vue';
                     : this.songs;
 
                 return new Collection(albums)
-                    .filter(album => album.album)
                     .unique('album')
                     .sortBy('album')
                     .use();
@@ -146,8 +142,16 @@ import category from './Categories/Section.vue';
             },
 
             selectAlbum(album, play = false) {
+                let compilationArtists = this.settings.has('compilationArtists');
+
                 let songs = this.$collect(this.songs)
-                    .filter(song => song.album === album.album && song.year === album.year)
+                    .filter(song =>
+                        song.album === album.album &&
+                        song.year === album.year && (
+                            compilationArtists
+                                ? true : song.artist === album.artist
+                        )
+                    )
                     .sortBy('track')
                     .use();
 
