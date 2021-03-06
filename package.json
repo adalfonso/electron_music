@@ -54,7 +54,7 @@
     }
   },
   "dependencies": {
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "glob": "^7.1.2",
     "moment": "^2.22.1",
     "musicmetadata": "^2.0.5",
