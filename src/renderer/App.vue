@@ -5,11 +5,11 @@
 </template>
 
 <script>
-  export default {
-    name: 'music_player'
-  }
+export default {
+  name: "music_player",
+};
 </script>
 
 <style>
-  /* CSS */
+/* CSS */
 </style>

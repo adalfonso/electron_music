@@ -1,97 +1,112 @@
-$light-blue: #C0C4CC;
-$med-blue: #60646C;
-$med-blue-hover: #80848C;
-$dark-blue: #20242C;
-$dark-blue-hover: #30343C;
-$dark-blue-transparent: rgba(32, 34, 44, .85);
+$light-blue: #c0c4cc;
+$med-blue: #60646c;
+$med-blue-hover: #80848c;
+$dark-blue: #20242c;
+$dark-blue-hover: #30343c;
+$dark-blue-transparent: rgba(32, 34, 44, 0.85);
 
-@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700');
+@import url("https://fonts.googleapis.com/css?family=Lato:100,300,400,700");
 
-* { box-sizing: border-box; }
-
-html { height: 100%; }
-
-body { margin: 0; height: 100%; }
-
-input {
-    border: 1px solid $med-blue;
-    font-size: 1.25rem;
-    font-weight: 300;
-    border-radius: 2px;
+* {
+  box-sizing: border-box;
 }
 
-table { border-collapse: collapse; }
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+input {
+  border: 1px solid $med-blue;
+  font-size: 1.25rem;
+  font-weight: 300;
+  border-radius: 2px;
+}
+
+table {
+  border-collapse: collapse;
+}
 
 #app {
-    font-family: 'Lato', sans-serif;
-    height: 100%;
-    min-height: 600px;
-    position: relative;
+  font-family: "Lato", sans-serif;
+  height: 100%;
+  min-height: 600px;
+  position: relative;
 }
 
 .overlay {
-    background: $dark-blue-transparent;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
+  background: $dark-blue-transparent;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
 
-    &.center {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+  &.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .capitalize {
-    &, * { text-transform: capitalize; }
+  &,
+  * {
+    text-transform: capitalize;
+  }
 }
 
 .ui-button-set {
-    display: inline-flex;
+  display: inline-flex;
 
-    > div {
-        background: $med-blue;
-        cursor: pointer;
-        padding: .5rem;
-        line-height: 1em;
+  > div {
+    background: $med-blue;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1em;
 
-        &.selected {
-            background: $light-blue;
-            font-weight: 700;
+    &.selected {
+      background: $light-blue;
+      font-weight: 700;
 
-            &:hover { background: $light-blue; }
-        }
-
-        &:hover { background: $med-blue-hover; }
-
-        &:first-of-type {
-            border-bottom-left-radius: .25rem;
-            border-top-left-radius: .25rem;
-        }
-
-        &:last-of-type {
-            border-bottom-right-radius: .25rem;
-            border-top-right-radius: .25rem;
-        }
+      &:hover {
+        background: $light-blue;
+      }
     }
 
+    &:hover {
+      background: $med-blue-hover;
+    }
+
+    &:first-of-type {
+      border-bottom-left-radius: 0.25rem;
+      border-top-left-radius: 0.25rem;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+    }
+  }
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: $dark-blue-hover;
+  background: $dark-blue-hover;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $med-blue;
+  background: $med-blue;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $light-blue;
+  background: $light-blue;
 }

@@ -1,47 +1,40 @@
 <template>
-    <div id="wrap">
-        <fileMenu :settings="settings">
-        </fileMenu>
+  <div id="wrap">
+    <fileMenu :settings="settings"> </fileMenu>
 
-        <categories
-            :player="player"
-            :settings="settings">
-        </categories>
+    <categories :player="player" :settings="settings"> </categories>
 
-        <playlist :player="player">
-        </playlist>
+    <playlist :player="player"> </playlist>
 
-        <toolbar :player="player">
-        </toolbar>
-    </div>
+    <toolbar :player="player"> </toolbar>
+  </div>
 </template>
 
 <script>
-
-import fileMenu from './Main/FileMenu.vue';
-import categories from './Main/Categories.vue';
-import playlist from './Main/Playlist.vue';
-import toolbar from './Main/Toolbar.vue';
-import Player from '@/lib/Player.js';
-import Settings from '@/lib/Settings.js';
+import fileMenu from "./Main/FileMenu.vue";
+import categories from "./Main/Categories.vue";
+import playlist from "./Main/Playlist.vue";
+import toolbar from "./Main/Toolbar.vue";
+import Player from "@/lib/Player.js";
+import Settings from "@/lib/Settings.js";
 
 export default {
-    components : { fileMenu, categories, playlist, toolbar },
+  components: { fileMenu, categories, playlist, toolbar },
 
-    data() {
-        return {
-            player: new Player(),
-            settings: new Settings()
-        }
-    }
-}
+  data() {
+    return {
+      player: new Player(),
+      settings: new Settings(),
+    };
+  },
+};
 </script>
 
 <style lang="scss">
-    #wrap {
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
+#wrap {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 </style>
