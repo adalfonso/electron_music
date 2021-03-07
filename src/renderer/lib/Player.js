@@ -1,7 +1,8 @@
 import Playlist from "./Playlist.js";
 
 class Player {
-  constructor(playlist = []) {
+  constructor(playlist = [], db) {
+    this.db = db;
     this.audio = new Audio();
     this.playing = false;
     this.currentTime = 0;
@@ -25,6 +26,20 @@ class Player {
     this.audio.addEventListener("ended", () => {
       this.playing = false;
       this.next();
+    });
+  }
+
+  loadFiles() {
+    return new Promise((resolve, reject) => {
+      this.db.library.find({}, (err, docs) => {
+        if (err) {
+          console.log({ err });
+          return reject(err);
+        }
+
+        console.log({ docs: docs.length });
+        return resolve(docs);
+      });
     });
   }
 

@@ -82,6 +82,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/global";
+
 #playlist {
   background: $dark-blue;
   position: relative;

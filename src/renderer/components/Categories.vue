@@ -177,6 +177,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/global";
+
 #categories {
   border-bottom: 6px solid $dark-blue-hover;
   display: flex;

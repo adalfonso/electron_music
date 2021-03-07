@@ -39,6 +39,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/global";
+
 #file-browser {
   background: $med-blue-hover;
   border: 1px solid $med-blue;

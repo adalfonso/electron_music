@@ -23,7 +23,7 @@ export default {
 
   data() {
     return {
-      player: new Player(),
+      player: new Player([], this.$db),
       settings: new Settings(),
     };
   },

@@ -14,6 +14,10 @@
       </ul>
     </div>
 
+    <div class="menu-item">
+      Random
+    </div>
+
     <file-browser v-if="browsing" @hide="browsing = false"> </file-browser>
   </section>
 </template>
@@ -43,6 +47,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/global";
+
 #file-menu {
   background: $dark-blue;
   color: #fff;

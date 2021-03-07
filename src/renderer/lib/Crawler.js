@@ -16,9 +16,8 @@ class Crawler {
   crawl(path = this.path) {
     this.active = true;
 
-    const getDirectories = (src, callback) => {
+    const getDirectories = (src, callback) =>
       glob(path + "/**/*.@(mp3|flac|m4a)", callback);
-    };
 
     getDirectories("test", (err, res) => {
       if (err) {

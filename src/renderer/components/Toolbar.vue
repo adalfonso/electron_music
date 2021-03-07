@@ -34,6 +34,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/global";
+
 #toolbar {
   background: $dark-blue;
   border-top: 6px solid $dark-blue-hover;
