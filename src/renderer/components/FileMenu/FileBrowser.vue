@@ -30,9 +30,7 @@ export default {
     },
 
     select(event) {
-      this.crawler.active = true;
-      this.crawler.path = event.target.files[0].path;
-      this.crawler.crawl();
+      this.crawler.crawl(Array.from(event.target.files));
     },
   },
 };

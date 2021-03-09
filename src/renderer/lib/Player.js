@@ -4,6 +4,7 @@ class Player {
   constructor(playlist = [], db) {
     this.db = db;
     this.audio = new Audio();
+    this.audio.crossOrigin = "anonymous";
     this.playing = false;
     this.currentTime = 0;
     this.duration = 0;
@@ -33,11 +34,8 @@ class Player {
     return new Promise((resolve, reject) => {
       this.db.library.find({}, (err, docs) => {
         if (err) {
-          console.log({ err });
           return reject(err);
         }
-
-        console.log({ docs: docs.length });
         return resolve(docs);
       });
     });
@@ -48,15 +46,15 @@ class Player {
     this.currentTime = this.audio.currentTime;
   }
 
-  load(path, audio = this.audio) {
-    audio.src = path;
+  async load(src, audio = this.audio) {
+    audio.src = src;
 
     return this;
   }
 
-  play(path = null) {
-    if (path) {
-      this.load(path);
+  async play(file = null) {
+    if (file) {
+      this.load(file);
     }
 
     return this.audio.play();

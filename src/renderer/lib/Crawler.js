@@ -13,67 +13,59 @@ class Crawler {
     db.library.remove({}, { multi: true }, (err, numRemoved) => {});
   }
 
-  crawl(path = this.path) {
+  async crawl(files) {
     this.active = true;
 
-    const getDirectories = (src, callback) =>
-      glob(path + "/**/*.@(mp3|flac|m4a)", callback);
+    const processing = files
+      .map((file) => file.path)
+      .map((path) =>
+        new Promise((resolve, reject) => {
+          let readableStream = fs.createReadStream(path);
+          this.processing = path;
 
-    getDirectories("test", (err, res) => {
-      if (err) {
-        console.log("Error", err);
-      } else {
-        this.files = res;
-        this.stream();
-      }
+          mm(readableStream, (err, meta) => {
+            if (err) {
+              reject(err);
+            }
+            readableStream.close();
+            resolve({ path, meta });
+          });
+        }).catch(console.log)
+      );
+
+    Promise.all(processing).then((result) => {
+      console.log("done", { result });
+      this.insert(result);
     });
-  }
 
-  stream() {
-    if (!this.files.length) {
-      return this.insert(this.processed);
-    }
-
-    new Promise((resolve) => {
-      let readableStream = fs.createReadStream(this.files[0]);
-      this.processing = this.files[0];
-
-      mm(readableStream, (err, metadata) => {
-        if (err) {
-          throw err;
-        }
-
-        resolve(metadata);
-        readableStream.close();
-      });
-    }).then((item) => {
-      this.processed.push({
-        path: this.files[0],
-        meta: item,
-      });
-
-      this.files.splice(0, 1);
-      this.stream();
-    });
+    return files;
   }
 
   insert(files) {
-    db.library.insert(
-      files.map((file) => {
-        return {
-          path: file.path.replace(/\\/g, "/"),
-          artist: file.meta.artist[0],
-          album: file.meta.album,
-          duration: file.meta.duration,
-          genre: file.meta.genre[0],
-          title: file.meta.title,
-          track: file.meta.track.no,
-          year: file.meta.year,
-        };
-      })
-    );
+    const docs = this.processFiles(files);
+
+    console.log({ docs, db });
+
+    db.library.insert(docs, (err, newDocs) => {
+      console.log("insertdone", { err, newDocs });
+    });
 
     this.active = false;
+  }
+
+  processFiles(files) {
+    return files.map((file) => {
+      return {
+        path: file.path.replace(/\\/g, "/"),
+        artist: file.meta.artist[0],
+        album: file.meta.album,
+        duration: file.meta.duration,
+        genre: file.meta.genre[0],
+        title: file.meta.title,
+        track: file.meta.track.no,
+        year: file.meta.year,
+      };
+    });
   }
 }
 

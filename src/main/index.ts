@@ -1,8 +1,7 @@
-import { app, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow } from "electron";
 import * as path from "path";
-import { format as formatUrl } from "url";
 
-const isDevelopment = process.env.NODE_ENV !== "production";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: Electron.BrowserWindow;
@@ -13,31 +12,24 @@ function createMainWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
+      /**
+       * TODO: remove this option
+       *
+       * This is set as a hack to get dev envs to access local files.
+       */
+      webSecurity: !isDevelopment,
     },
-    useContentSize: true,
   });
 
+  // disable main menu
   window.setMenu(null);
 
   if (isDevelopment) {
     window.webContents.openDevTools();
-  }
-
-  if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
-    window.loadURL(
-      formatUrl({
-        pathname: path.join(__dirname, "index.html"),
-        protocol: "file",
-        slashes: true,
-      })
-    );
+    window.loadURL(path.join(__dirname, "index.html"));
   }
-
-  // window.on("closed", () => {
-  //   mainWindow = null;
-  // });
 
   window.webContents.on("devtools-opened", () => {
     window.focus();
@@ -63,4 +55,9 @@ app.on("activate", () => {
 
 app.on("ready", () => {
   mainWindow = createMainWindow();
+
+  protocol.registerFileProtocol("file", (request, callback) => {
+    const pathname = decodeURI(request.url.replace("file:///", ""));
+    callback(pathname);
+  });
 });
