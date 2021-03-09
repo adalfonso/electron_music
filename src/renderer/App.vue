@@ -17,7 +17,7 @@ import fileMenu from "./components/FileMenu.vue";
 import categories from "./components/Categories.vue";
 import playlist from "./components/Playlist.vue";
 import toolbar from "./components/Toolbar.vue";
-import Player from "@/lib/Player.js";
+import { Player } from "@/lib/Player";
 import Settings from "@/lib/Settings.js";
 
 export default {

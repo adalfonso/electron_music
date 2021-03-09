@@ -9,7 +9,7 @@
       </div>
 
       <div class="play-button" @click="player.toggle()">
-        <div v-if="player.playing" class="pause">
+        <div v-if="player.isPlaying" class="pause">
           <div></div>
           <div></div>
         </div>

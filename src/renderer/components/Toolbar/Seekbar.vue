@@ -1,7 +1,7 @@
 <template>
   <section class="seekbar-wrap">
     <div class="time">
-      <div class="current" v-show="player.currentTime">{{ currentTime }}</div>
+      <div class="current" v-show="player.current_time">{{ currentTime }}</div>
       <div class="duration" v-show="player.duration">{{ duration }}</div>
     </div>
 
@@ -34,7 +34,7 @@ export default {
 
   computed: {
     currentTime() {
-      return this.minutify(this.player.currentTime);
+      return this.minutify(this.player.current_time);
     },
 
     duration() {
@@ -44,7 +44,7 @@ export default {
     style() {
       let ratio = this.seeking
         ? this.currentX / this.$refs.phantomSeekbar.clientWidth
-        : this.player.currentTime / this.player.duration;
+        : this.player.current_time / this.player.duration;
 
       let percent = 100 - ratio * 100;
 
@@ -64,7 +64,7 @@ export default {
     },
 
     selectSeek(event) {
-      if (this.player.audio.src) {
+      if (this.player.hasAudioSource()) {
         this.seeking = true;
       }
     },

@@ -88,6 +88,7 @@ export default {
   background: $dark-blue;
   position: relative;
   display: flex;
+  overflow: auto;
   flex-direction: column;
   flex: 1 1 auto;
 

@@ -34,7 +34,6 @@ class Crawler {
       );
 
     Promise.all(processing).then((result) => {
-      console.log("done", { result });
       this.insert(result);
     });
 
@@ -44,11 +43,7 @@ class Crawler {
   insert(files) {
     const docs = this.processFiles(files);
 
-    console.log({ docs, db });
-
-    db.library.insert(docs, (err, newDocs) => {
-      console.log("insertdone", { err, newDocs });
-    });
+    db.library.insert(docs, (err, newDocs) => {});
 
     this.active = false;
   }
