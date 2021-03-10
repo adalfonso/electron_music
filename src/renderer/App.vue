@@ -18,6 +18,7 @@ import categories from "./components/Categories.vue";
 import playlist from "./components/Playlist.vue";
 import toolbar from "./components/Toolbar.vue";
 import { Player } from "@/lib/Player";
+import { Playlist } from "@/lib/Playlist";
 import Settings from "@/lib/Settings.js";
 
 export default {
@@ -25,7 +26,7 @@ export default {
 
   data() {
     return {
-      player: new Player([], this.$db),
+      player: new Player(new Playlist([]), this.$db),
       settings: new Settings(),
     };
   },

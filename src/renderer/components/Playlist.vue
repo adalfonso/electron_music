@@ -3,11 +3,12 @@
     <section class="options">
       <div class="ui-button-set capitalize">
         <div
-          v-for="s in states"
-          :class="s === state ? 'selected' : ''"
-          @click="changeState(s)"
+          v-for="state in states"
+          :class="playlist.state === state ? 'selected' : ''"
+          @click="playlist.state = state"
+          :key="state"
         >
-          {{ s }}
+          {{ state }}
         </div>
       </div>
     </section>
@@ -20,10 +21,13 @@
           <th>Title</th>
           <th>Track</th>
         </tr>
+
+        <!-- TODO: use a unique ID for key -->
         <tr
           v-for="(song, index) in songs"
           :class="indexClass(index)"
           @click="player.changeIndex(index)"
+          :key="song.artist + song.title + index"
         >
           <td>{{ song.artist }}</td>
           <td>{{ song.album }}</td>
@@ -40,6 +44,7 @@
 </template>
 
 <script>
+import { PlaylistState } from "../lib/Playlist";
 export default {
   props: {
     player: { required: true },
@@ -47,19 +52,13 @@ export default {
 
   data() {
     return {
-      states: ["browsing", "playlist"],
+      states: PlaylistState,
     };
   },
 
   computed: {
     songs() {
-      return this.state === "browsing"
-        ? this.player.playlist.browsing
-        : this.player.playlist.list;
-    },
-
-    state() {
-      return this.player.playlist.state;
+      return this.playlist.getVisibleList();
     },
 
     playlist() {
@@ -68,14 +67,13 @@ export default {
   },
 
   methods: {
-    changeState(state) {
-      this.player.playlist.state = state;
-    },
-
     indexClass(index) {
-      return this.playlist.state === "playlist" && index === this.playlist.index
-        ? "selected"
-        : "";
+      // If we are browsing, no tracks will have a special class
+      if (this.playlist.isBrowsing()) {
+        return "";
+      }
+
+      return index === this.playlist.index ? "selected" : "";
     },
   },
 };

@@ -1,4 +1,4 @@
-import Playlist from "./Playlist.js";
+import { Playlist } from "./Playlist";
 
 /**
  * Main class for playing audio
@@ -23,24 +23,17 @@ export class Player {
   private _volume: number = 1;
 
   /**
-   * Current playlist
-   *
-   * A playlist is simply a list of tracks that are queued to play. A playlist
-   * does not necessarily have to be a concotion of various songs. e.g. if you
-   * playing an album, the playlist would contain all the album tracks.
-   */
-  private _playlist: any;
-
-  /**
    * Create a new player
    *
-   * @param playlist - initial player (optional)
+   * Note: A playlist is simply a list of tracks that are queued to play. A
+   * playlist does not necessarily have to be a concotion of various songs.
+   * e.g. if you playing an album, the playlist would contain all the album
+   * tracks.
+   *
+   * @param playlist - initial playlist
    * @param _db      - data store
    */
-  constructor(playlist = [], private _db: any) {
-    // TODO: DI this in instead
-    this._playlist = new Playlist(playlist);
-
+  constructor(private _playlist: Playlist, private _db: any) {
     // TODO: Determine if this is needed
     this._audio.crossOrigin = "anonymous";
 
@@ -61,6 +54,26 @@ export class Player {
       this._is_playing = false;
       this.next();
     });
+  }
+
+  public get playlist() {
+    return this._playlist;
+  }
+
+  public get volume() {
+    return this._volume;
+  }
+
+  public get current_time() {
+    return this._current_time;
+  }
+
+  public get duration() {
+    return this._duration;
+  }
+
+  public get is_playing(): boolean {
+    return this._is_playing;
   }
 
   /**
@@ -91,9 +104,9 @@ export class Player {
    * @return this
    */
   public changeIndex(index: number = 0): this {
-    this._playlist.change(index);
-    this._playlist.state = "playlist";
-    return this.play(this._playlist.currentFile());
+    this._playlist.index = index;
+
+    return this.play(this._playlist.current_src);
   }
 
   /**
@@ -121,14 +134,15 @@ export class Player {
    * TODO: fix any type
    */
   public changePlaylist(list: any[], force_play: boolean = false): this {
+    /**
+     * If we want to play this playlist immediately, then we will set it as the
+     * main playlist. Otherwise we just want to browse it.
+     */
     if (force_play) {
-      this._playlist.state = "playlist";
-      this._playlist.list = list;
-      this._playlist.index = 0;
-      this.play(this._playlist.currentFile());
+      this._playlist.setMainList(list);
+      this.play(this._playlist.current_src);
     } else {
-      this._playlist.state = "browsing";
-      this._playlist.browsing = list;
+      this._playlist.setBrowsingList(list);
     }
 
     return this;
@@ -167,7 +181,7 @@ export class Player {
   public previous(): this {
     if (this._playlist.hasPrevious()) {
       this._playlist.previous();
-      this.play(this._playlist.currentFile());
+      this.play(this._playlist.current_src);
     }
 
     return this;
@@ -181,7 +195,7 @@ export class Player {
   public next(): this {
     if (this._playlist.hasNext()) {
       this._playlist.next();
-      this.play(this._playlist.currentFile());
+      this.play(this._playlist.current_src);
     }
 
     return this;
@@ -198,28 +212,8 @@ export class Player {
     this._volume = volume;
   }
 
-  public isPlaying(): boolean {
-    return this._is_playing;
-  }
-
   public hasAudioSource(): boolean {
     return this._audio.src !== undefined;
-  }
-
-  public get playlist() {
-    return this._playlist;
-  }
-
-  public get volume() {
-    return this._volume;
-  }
-
-  public get current_time() {
-    return this._current_time;
-  }
-
-  public get duration() {
-    return this._duration;
   }
 
   /**

@@ -5,7 +5,7 @@
         <template v-if="nowPlaying">
           {{ nowPlaying.artist }} - {{ nowPlaying.title }}
         </template>
-        <template v-else>N / A</template>
+        <template v-else>...</template>
       </h2>
 
       <seekbar :player="player"></seekbar>
@@ -27,7 +27,7 @@ export default {
 
   computed: {
     nowPlaying() {
-      return this.player.playlist.nowPlaying();
+      return this.player.playlist.now_playing;
     },
   },
 };
