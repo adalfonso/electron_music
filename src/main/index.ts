@@ -19,13 +19,15 @@ function createMainWindow() {
        */
       webSecurity: !isDevelopment,
     },
+    width: 1024,
+    height: 1200,
   });
 
   // disable main menu
   window.setMenu(null);
 
   if (isDevelopment) {
-    window.webContents.openDevTools();
+    window.webContents.openDevTools({ mode: "bottom" });
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
     window.loadURL(path.join(__dirname, "index.html"));
