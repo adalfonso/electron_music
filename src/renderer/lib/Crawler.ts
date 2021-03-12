@@ -1,10 +1,9 @@
 import fs from "fs";
 import mm from "musicmetadata";
-// TODO: make this an interface
-import Datastore from "nedb";
+import { Datastore } from "@/data/Datastore";
 
-/** This is tha main data format for media in the app */
-interface MediaMetaData {
+/** This is the main data format for media in the app */
+export interface MediaMetaData {
   path: string;
   artist: string;
   album: string;
@@ -30,7 +29,7 @@ export class Crawler {
    *
    * @param _db - data store for file meta data
    */
-  constructor(private _db: Datastore) {}
+  constructor(private _db: Datastore<MediaMetaData>) {}
 
   public get is_busy(): boolean {
     return this._is_busy;
@@ -48,8 +47,13 @@ export class Crawler {
    * @return promise to indicate when operation completes
    */
   public async crawl(files): Promise<void> {
-    // let's clear existing files when this runs
-    this._db.remove({}, { multi: true }, (err, numRemoved) => {});
+    try {
+      // let's clear existing files when this runs
+      await this._db.remove({}, { multi: true });
+    } catch (e) {
+      console.log("An error occurred while crawling.", e);
+    }
+
     this._is_busy = true;
 
     /**
@@ -86,10 +90,12 @@ export class Crawler {
    *
    * @param files - file meta data
    */
-  insert(docs: MediaMetaData[]) {
-    this._db.insert(docs, (err, newDocs) => {});
+  async insert(docs: MediaMetaData[]) {
+    const inserted_docs = await this._db.insert(docs);
 
     this._is_busy = false;
+
+    return inserted_docs;
   }
 
   /**

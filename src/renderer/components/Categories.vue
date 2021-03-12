@@ -26,7 +26,7 @@
 <script>
 import Collection from "@/lib/Collection.js";
 import category from "./Categories/Section.vue";
-import { library_store } from "@/Datastore";
+import { library_store } from "@/index";
 
 export default {
   components: { category },
@@ -50,10 +50,12 @@ export default {
   },
 
   mounted() {
-    setInterval(() => {
-      library_store.find({}, (err, docs) => {
-        this.songs = docs;
-      });
+    setInterval(async () => {
+      try {
+        this.songs = await library_store.find({});
+      } catch (e) {
+        console.log("Failed to load media files.", e);
+      }
     }, 5000);
   },
 

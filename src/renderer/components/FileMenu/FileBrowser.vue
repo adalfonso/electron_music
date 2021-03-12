@@ -15,7 +15,7 @@
 <script lang="ts">
 import { Crawler } from "@/lib/Crawler";
 import { Vue, Component } from "vue-property-decorator";
-import { library_store } from "@/Datastore";
+import { library_store } from "@/index";
 
 @Component
 export default class FileBrowserComponent extends Vue {

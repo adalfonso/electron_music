@@ -1,4 +1,4 @@
-import { settings_store } from "@/Datastore";
+import { settings_store } from "@/index";
 
 class Settings {
   constructor() {
@@ -12,32 +12,30 @@ class Settings {
     return settings.length && settings[0].value;
   }
 
-  toggle(settingName) {
-    this.db.find({ name: settingName }, (err, docs) => {
+  async toggle(setting_name) {
+    try {
+      const docs = await this.db.find({ name: setting_name });
+
       if (docs.length) {
-        this.db.update(
-          docs[0],
-          {
-            $set: { value: !docs[0].value },
-          },
-          this.refresh.bind(this)
-        );
+        await this.db.update(docs[0], { $set: { value: !docs[0].value } });
+
+        this.refresh();
       } else {
-        this.db.insert(
-          {
-            name: settingName,
-            value: true,
-          },
-          this.refresh.bind(this)
-        );
+        await this.db.insert({ name: setting_name, value: true });
       }
-    });
+
+      this.refresh();
+    } catch (error) {
+      console.log(`Failed to toggle setting: ${setting_name}`, error);
+    }
   }
 
-  refresh() {
-    this.db.find({}, (err, docs) => {
-      this.all = docs;
-    });
+  async refresh() {
+    try {
+      this.all = await this.db.find({});
+    } catch (error) {
+      console.log("Failed to refresh local settings state", e);
+    }
   }
 }
 

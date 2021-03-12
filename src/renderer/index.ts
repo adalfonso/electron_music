@@ -1,9 +1,12 @@
-import Vue from "vue";
-
-//import App from "@/App.vue";
-import Collection from "./lib/Collection";
-
 import "./global.scss";
+import Collection from "./lib/Collection";
+import Vue from "vue";
+import { asyncDbFactory as db } from "./data/AsyncNedb";
+import { MediaMetaData } from "./lib/Crawler";
+//import App from "@/App.vue";
+
+export const library_store = db<MediaMetaData>("library");
+export const settings_store = db<MediaMetaData>("settings");
 
 /* eslint-disable no-new */
 new Vue({
