@@ -26,6 +26,7 @@
 <script>
 import Collection from "@/lib/Collection.js";
 import category from "./Categories/Section.vue";
+import { library_store } from "@/Datastore";
 
 export default {
   components: { category },
@@ -49,9 +50,11 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
-      this.$db.library.find({}, (err, docs) => (this.songs = docs));
-    }, 0);
+    setInterval(() => {
+      library_store.find({}, (err, docs) => {
+        this.songs = docs;
+      });
+    }, 5000);
   },
 
   computed: {

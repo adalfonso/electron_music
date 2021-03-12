@@ -26,7 +26,7 @@ export default {
 
   data() {
     return {
-      player: new Player(new Playlist([]), this.$db),
+      player: new Player(new Playlist([])),
       settings: new Settings(),
     };
   },

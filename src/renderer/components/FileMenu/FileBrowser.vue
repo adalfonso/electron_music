@@ -5,35 +5,31 @@
 
       <input type="file" webkitdirectory @change="select" />
 
-      <p v-if="crawler.active && crawler.processing">
-        <b>Crawling: {{ crawler.processing }}</b>
+      <p v-if="crawler.is_busy && crawler.current_file">
+        <b>Crawling: {{ crawler.current_file }}</b>
       </p>
     </section>
   </div>
 </template>
 
-<script>
-import Crawler from "@/lib/Crawler.js";
+<script lang="ts">
+import { Crawler } from "@/lib/Crawler";
+import { Vue, Component } from "vue-property-decorator";
+import { library_store } from "@/Datastore";
 
-export default {
-  data() {
-    return {
-      library: [],
-      lib: this.$db.library,
-      crawler: new Crawler(),
-    };
-  },
+@Component
+export default class FileBrowserComponent extends Vue {
+  crawler: Crawler = new Crawler(library_store);
 
-  methods: {
-    hide() {
-      this.$emit("hide");
-    },
+  hide() {
+    this.$emit("hide");
+  }
 
-    select(event) {
-      this.crawler.crawl(Array.from(event.target.files));
-    },
-  },
-};
+  select(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.crawler.crawl(Array.from(target.files));
+  }
+}
 </script>
 
 <style lang="scss">

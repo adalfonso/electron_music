@@ -1,7 +1,6 @@
 import Vue from "vue";
 
 //import App from "@/App.vue";
-import db from "./datastore";
 import Collection from "./lib/Collection";
 
 import "./global.scss";
@@ -12,7 +11,6 @@ new Vue({
   template: "<App/>",
 }).$mount("#app");
 
-Vue.prototype.$db = db;
 Vue.prototype.$collect = (data = []) => new Collection(data);
 
 // class Bus {

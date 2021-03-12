@@ -8,10 +8,11 @@
     "strictFunctionTypes": false,
     "resolveJsonModule": true,
     "noImplicitAny": false,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "@common/*": ["./src/common/*"],
-      "@/*": ["./src/renderer/ts/*"],
+      "@/*": ["./src/renderer/*"],
       "@img/*": ["./src/renderer/img/*"]
     }
   }

@@ -1,8 +1,8 @@
-import DB from "@/datastore.js";
+import { settings_store } from "@/Datastore";
 
 class Settings {
   constructor() {
-    this.db = DB;
+    this.db = settings_store;
     this.all = [];
     this.refresh();
   }
@@ -13,9 +13,9 @@ class Settings {
   }
 
   toggle(settingName) {
-    this.db.settings.find({ name: settingName }, (err, docs) => {
+    this.db.find({ name: settingName }, (err, docs) => {
       if (docs.length) {
-        this.db.settings.update(
+        this.db.update(
           docs[0],
           {
             $set: { value: !docs[0].value },
@@ -23,7 +23,7 @@ class Settings {
           this.refresh.bind(this)
         );
       } else {
-        this.db.settings.insert(
+        this.db.insert(
           {
             name: settingName,
             value: true,
@@ -35,7 +35,7 @@ class Settings {
   }
 
   refresh() {
-    this.db.settings.find({}, (err, docs) => {
+    this.db.find({}, (err, docs) => {
       this.all = docs;
     });
   }

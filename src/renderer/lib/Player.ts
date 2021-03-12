@@ -31,9 +31,8 @@ export class Player {
    * tracks.
    *
    * @param playlist - initial playlist
-   * @param _db      - data store
    */
-  constructor(private _playlist: Playlist, private _db: any) {
+  constructor(private _playlist: Playlist) {
     // TODO: Determine if this is needed
     this._audio.crossOrigin = "anonymous";
 
