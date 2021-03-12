@@ -1,0 +1,8 @@
+// Test Versio
+{
+  "extends": "../tsconfig.json",
+
+  "compilerOptions": {
+    "module": "commonjs"
+  }
+}
