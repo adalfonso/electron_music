@@ -15,7 +15,7 @@
       <h5>Media</h5>
       <div class="items" id="category-media">
         <div v-for="medium in media" class="item">
-          {{ medium.type }}
+          {{ medium.file_type }}
           <b class="stat">[{{ medium.percent }}%]</b>
         </div>
       </div>
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import Collection from "@/lib/Collection.js";
 import category from "./Categories/Section.vue";
 import { library_store } from "@/index";
 
@@ -81,11 +80,7 @@ export default {
     },
 
     artists() {
-      return new Collection(this.songs)
-        .unique("artist")
-        .map((song) => song.artist)
-        .sort()
-        .use();
+      return this.getUnique("artist");
     },
 
     albums() {
@@ -93,35 +88,41 @@ export default {
         ? this.songs.filter((song) => song.artist === this.selected.artist)
         : this.songs;
 
-      return new Collection(albums)
-        .unique("album")
-        .sortBy("album")
-        .use();
+      return albums
+        .reduce(
+          (carry, song) => {
+            const album = song.album;
+
+            if (carry.albums[album] === undefined) {
+              carry.albums[album] = true;
+              carry.acc.push(song);
+            }
+
+            return carry;
+          },
+          { albums: {}, acc: [] }
+        )
+        .acc.sort((a, b) => a.album.localeCompare(b.album));
     },
 
     genres() {
-      return new Collection(this.songs)
-        .unique("genre")
-        .map((song) => song.genre)
-        .filter((genre) => genre)
-        .sort()
-        .use();
+      return this.getUnique("genre").sort();
     },
 
     media() {
-      let total = this.songs.length;
+      const file_types = this.songs.reduce((carry, { file_type }) => {
+        carry[file_type] = (carry[file_type] || 0) + 1;
 
-      return new Collection(this.songs)
-        .groupBy((song) => song.path.match(/.([\w\d]+)$/)[1])
-        .map((group, key) => {
-          return {
-            type: key.toUpperCase(),
-            count: group.length,
-            percent: ((group.length / total) * 100).toFixed(2),
-          };
-        })
-        .sortByDesc("count")
-        .use();
+        return carry;
+      }, {});
+
+      return Object.entries(file_types)
+        .sort((a, b) => b[1] - a[1])
+        .map(([file_type, count]) => ({
+          file_type,
+          count,
+          percent: ((count / this.songs.length) * 100).toFixed(2),
+        }));
     },
 
     selectMethod() {
@@ -132,6 +133,10 @@ export default {
   },
 
   methods: {
+    getUnique(key) {
+      return [...new Set(this.songs.map((song) => song[key]))];
+    },
+
     selectCategory(type, item, play) {
       this.selected[type] = item;
       this.selected.last = type;
@@ -139,10 +144,9 @@ export default {
     },
 
     selectArtist(artist, play = false) {
-      let songs = this.$collect(this.songs)
+      let songs = this.songs
         .filter((song) => song.artist === artist)
-        .sortBy((song) => song.album + song.track)
-        .use();
+        .sort((a, b) => (a.album + a.track).localeCompare(b.album + b.track));
 
       this.player.changePlaylist(songs, play);
     },
@@ -150,30 +154,27 @@ export default {
     selectAlbum(album, play = false) {
       let compilationArtists = this.settings.has("compilationArtists");
 
-      let songs = this.$collect(this.songs)
+      let songs = this.songs
         .filter(
           (song) =>
             song.album === album.album &&
             song.year === album.year &&
             (compilationArtists ? true : song.artist === album.artist)
         )
-        .sortBy("track")
-        .use();
+        .sort((a, b) => a.track - b.track);
 
       this.player.changePlaylist(songs, play);
     },
 
     selectGenre(genre, play = false) {
-      let songs = this.$collect(this.songs)
+      const genreFormat = (song) =>
+        song.artist.padEnd(40, "") +
+        song.album.padEnd(20, "") +
+        song.track.toString().padStart(3, "0");
+
+      let songs = this.songs
         .filter((song) => song.genre === genre)
-        .sortBy((song) => {
-          return (
-            song.artist.padEnd(40, "") +
-            song.album.padEnd(20, "") +
-            song.track.toString().padStart(3, "0")
-          );
-        })
-        .use();
+        .sort((a, b) => genreFormat(a).localeCompare(genreFormat(b)));
 
       this.player.changePlaylist(songs, play);
     },

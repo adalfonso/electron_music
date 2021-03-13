@@ -12,6 +12,7 @@ export interface MediaMetaData {
   title: string;
   track: string;
   year: string;
+  file_type: string;
 }
 
 /**
@@ -116,6 +117,7 @@ export class Crawler {
         title: file.meta.title,
         track: file.meta.track.no,
         year: file.meta.year,
+        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase(),
       };
     });
   }
