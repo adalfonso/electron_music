@@ -152,15 +152,22 @@ export default {
     },
 
     selectAlbum(album, play = false) {
-      let compilationArtists = this.settings.has("compilationArtists");
-
+      let compilations_enabled = this.settings.has("compilationArtists");
       let songs = this.songs
-        .filter(
-          (song) =>
+        .filter((song) => {
+          const show_compilations = compilations_enabled && !!album.album;
+          const show_unknown_album = !album.album && !this.selected.artist;
+          const artist_is_irrelevant = show_compilations || show_unknown_album;
+          const artist_match = artist_is_irrelevant
+            ? true
+            : song.artist === album.artist;
+
+          return (
             song.album === album.album &&
             song.year === album.year &&
-            (compilationArtists ? true : song.artist === album.artist)
-        )
+            artist_match
+          );
+        })
         .sort((a, b) => a.track - b.track);
 
       this.player.changePlaylist(songs, play);
