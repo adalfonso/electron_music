@@ -13,9 +13,9 @@ import { remote } from "electron";
 const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
   find: (query) =>
     new Promise((resolve, reject) => {
-      db.find(query, (err, docs) => {
-        if (err) {
-          reject(err);
+      db.find(query, (error, docs) => {
+        if (error) {
+          reject(error);
         }
 
         resolve(docs);
@@ -24,9 +24,9 @@ const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
 
   insert: (docs) =>
     new Promise((resolve, reject) => {
-      db.insert(docs, (err, docs) => {
-        if (err) {
-          reject(err);
+      db.insert(docs, (error, docs) => {
+        if (error) {
+          reject(error);
         }
 
         resolve(docs);
@@ -39,9 +39,9 @@ const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
         query,
         update,
         options,
-        (err, numberOfUpdated, _affectedDocuments, upsert) => {
-          if (err) {
-            reject(err);
+        (error, numberOfUpdated, _affectedDocuments, upsert) => {
+          if (error) {
+            reject(error);
           }
 
           resolve({ update_count: numberOfUpdated, upsert });
@@ -51,9 +51,9 @@ const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
 
   remove: (query, options) =>
     new Promise((resolve, reject) => {
-      db.remove(query, options, (err, number) => {
-        if (err) {
-          reject(err);
+      db.remove(query, options, (error, number) => {
+        if (error) {
+          reject(error);
         }
 
         resolve(number);

@@ -1,12 +1,13 @@
 import "./global.scss";
 import Collection from "./lib/Collection";
 import Vue from "vue";
-import { asyncDbFactory as db } from "./data/AsyncNedb";
 import { MediaMetaData } from "./lib/Crawler";
+import { SettingsData } from "./lib/Settings";
+import { asyncDbFactory as db } from "./data/AsyncNedb";
 //import App from "@/App.vue";
 
 export const library_store = db<MediaMetaData>("library");
-export const settings_store = db<MediaMetaData>("settings");
+export const settings_store = db<SettingsData>("settings");
 
 /* eslint-disable no-new */
 new Vue({

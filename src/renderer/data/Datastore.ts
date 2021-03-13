@@ -1,12 +1,19 @@
-/** Options sent for a removal operation */
-interface RemoveOptions {
+/** Options sent for a update operation */
+interface UpdateOptions {
   multi?: boolean;
+  upsert?: boolean;
+  returnUpdatedDocs?: boolean;
 }
 
 /** Resulting data from an update operation */
 interface UpdateResult {
   update_count: number;
   upsert: boolean;
+}
+
+/** Options sent for a removal operation */
+interface RemoveOptions {
+  multi?: boolean;
 }
 
 /** Nosql data store */
@@ -21,7 +28,7 @@ export interface Datastore<T> {
   update(
     query: unknown,
     update: unknown,
-    options: unknown
+    options?: UpdateOptions
   ): Promise<UpdateResult>;
 
   /** Remove documents from the store */

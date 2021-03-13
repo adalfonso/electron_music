@@ -50,8 +50,8 @@ export class Crawler {
     try {
       // let's clear existing files when this runs
       await this._db.remove({}, { multi: true });
-    } catch (e) {
-      console.log("An error occurred while crawling.", e);
+    } catch (error) {
+      console.log("An error occurred while crawling.", error);
     }
 
     this._is_busy = true;
@@ -70,9 +70,9 @@ export class Crawler {
           let readableStream = fs.createReadStream(path);
           this._current_file = path;
 
-          mm(readableStream, (err, meta) => {
-            if (err) {
-              reject(err);
+          mm(readableStream, (error, meta) => {
+            if (error) {
+              reject(error);
             }
             readableStream.close();
             resolve({ path, meta });

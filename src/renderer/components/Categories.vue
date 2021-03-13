@@ -53,8 +53,8 @@ export default {
     setInterval(async () => {
       try {
         this.songs = await library_store.find({});
-      } catch (e) {
-        console.log("Failed to load media files.", e);
+      } catch (error) {
+        console.log("Failed to load media files.", error);
       }
     }, 5000);
   },
