@@ -1,19 +1,7 @@
 import fs from "fs";
 import mm from "musicmetadata";
 import { Datastore } from "@/data/Datastore";
-
-/** This is the main data format for media in the app */
-export interface MediaMetaData {
-  path: string;
-  artist: string;
-  album: string;
-  duration: string;
-  genre: string;
-  title: string;
-  track: string;
-  year: string;
-  file_type: string;
-}
+import { MediaMetaData } from "@/media/Media";
 
 /**
  * Reads a directory on disk, extracts meta data and stores

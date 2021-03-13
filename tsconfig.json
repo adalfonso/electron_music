@@ -10,10 +10,6 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "baseUrl": ".",
-    "paths": {
-      "@common/*": ["./src/common/*"],
-      "@/*": ["./src/renderer/*"],
-      "@img/*": ["./src/renderer/img/*"]
-    }
+    "paths": { "@/*": ["./src/renderer/*"] }
   }
 }

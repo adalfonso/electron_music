@@ -14,7 +14,7 @@
     <div class="category">
       <h5>Media</h5>
       <div class="items" id="category-media">
-        <div v-for="medium in media" class="item">
+        <div v-for="medium in this.transformer.media" class="item">
           {{ medium.file_type }}
           <b class="stat">[{{ medium.percent }}%]</b>
         </div>
@@ -26,6 +26,7 @@
 <script>
 import category from "./Categories/Section.vue";
 import { library_store } from "@/index";
+import { media_transformations } from "@/media/Transform";
 
 export default {
   components: { category },
@@ -62,67 +63,21 @@ export default {
     categories() {
       return {
         artist: {
-          list: this.artists,
+          list: this.transformer.artists,
           hasDefault: true,
-          display: (item) => item,
+          display: (artist) => artist,
         },
         album: {
-          list: this.albums,
+          list: this.transformer.albums(this.selected.artist),
           hasDefault: true,
-          display: (item) => (item.album ? item.album : "[Unknown Album]"),
+          display: (album) => album.name || "[Unknown Album]",
         },
         genre: {
-          list: this.genres,
+          list: this.transformer.genres,
           hasDefault: false,
-          display: (item) => item,
+          display: (genre) => genre,
         },
       };
-    },
-
-    artists() {
-      return this.getUnique("artist");
-    },
-
-    albums() {
-      let albums = this.selected.artist
-        ? this.songs.filter((song) => song.artist === this.selected.artist)
-        : this.songs;
-
-      return albums
-        .reduce(
-          (carry, song) => {
-            const album = song.album;
-
-            if (carry.albums[album] === undefined) {
-              carry.albums[album] = true;
-              carry.acc.push(song);
-            }
-
-            return carry;
-          },
-          { albums: {}, acc: [] }
-        )
-        .acc.sort((a, b) => a.album.localeCompare(b.album));
-    },
-
-    genres() {
-      return this.getUnique("genre").sort();
-    },
-
-    media() {
-      const file_types = this.songs.reduce((carry, { file_type }) => {
-        carry[file_type] = (carry[file_type] || 0) + 1;
-
-        return carry;
-      }, {});
-
-      return Object.entries(file_types)
-        .sort((a, b) => b[1] - a[1])
-        .map(([file_type, count]) => ({
-          file_type,
-          count,
-          percent: ((count / this.songs.length) * 100).toFixed(2),
-        }));
     },
 
     selectMethod() {
@@ -130,13 +85,13 @@ export default {
 
       return this["select" + str.charAt(0).toUpperCase() + str.slice(1)];
     },
+
+    transformer() {
+      return media_transformations(this.songs);
+    },
   },
 
   methods: {
-    getUnique(key) {
-      return [...new Set(this.songs.map((song) => song[key]))];
-    },
-
     selectCategory(type, item, play) {
       this.selected[type] = item;
       this.selected.last = type;
@@ -155,15 +110,15 @@ export default {
       let compilations_enabled = this.settings.has("compilationArtists");
       let songs = this.songs
         .filter((song) => {
-          const show_compilations = compilations_enabled && !!album.album;
-          const show_unknown_album = !album.album && !this.selected.artist;
+          const show_compilations = compilations_enabled && !!album.name;
+          const show_unknown_album = !album.name && !this.selected.artist;
           const artist_is_irrelevant = show_compilations || show_unknown_album;
           const artist_match = artist_is_irrelevant
             ? true
             : song.artist === album.artist;
 
           return (
-            song.album === album.album &&
+            song.album === album.name &&
             song.year === album.year &&
             artist_match
           );

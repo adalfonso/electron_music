@@ -1,7 +1,7 @@
 import "./global.scss";
 import App from "@/App.vue";
 import Vue from "vue";
-import { MediaMetaData } from "./lib/Crawler";
+import { MediaMetaData } from "./media/Media";
 import { SettingsData } from "./lib/Settings";
 import { asyncDbFactory as db } from "./data/AsyncNedb";
 
