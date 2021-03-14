@@ -31,6 +31,7 @@
 import category from "./Categories/Category.vue";
 import { MediaMetaData } from "@/media/Media";
 import { Player } from "@/lib/Player";
+import { Selector } from "@/media/Selector";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
@@ -46,6 +47,8 @@ export default class CategoriesComponent extends Vue {
 
   /** All library files */
   files: MediaMetaData[] = [];
+
+  selector: Selector = new Selector();
 
   /** Currently selected media properties */
   selected: Record<string, string> = {
@@ -86,61 +89,17 @@ export default class CategoriesComponent extends Vue {
     };
   }
 
-  get selectMethod() {
-    let str = this.selected.last;
-
-    return this["select" + str.charAt(0).toUpperCase() + str.slice(1)];
-  }
-
   get transformer() {
     return media_transformations(this.files);
   }
 
   selectCategory(type, item, play) {
-    this.selected[type] = item;
-    this.selected.last = type;
-    this.selectMethod(item, play);
-  }
+    this.selector.set(type, item);
+    this.selector.last = type;
 
-  selectArtist(artist, play = false) {
-    let songs = this.files
-      .filter((song) => song.artist === artist)
-      .sort((a, b) => (a.album + a.track).localeCompare(b.album + b.track));
+    const files = this.selector.select(item, play, this.settings);
 
-    this.player.changePlaylist(songs, play);
-  }
-
-  selectAlbum(album, play = false) {
-    let compilations_enabled = this.settings.has("compilationArtists");
-    let songs = this.files
-      .filter((song) => {
-        const show_compilations = compilations_enabled && !!album.name;
-        const show_unknown_album = !album.name && !this.selected.artist;
-        const artist_is_irrelevant = show_compilations || show_unknown_album;
-        const artist_match = artist_is_irrelevant
-          ? true
-          : song.artist === album.artist;
-
-        return (
-          song.album === album.name && song.year === album.year && artist_match
-        );
-      })
-      .sort((a, b) => Number(a.track) - Number(b.track));
-
-    this.player.changePlaylist(songs, play);
-  }
-
-  selectGenre(genre, play = false) {
-    const genreFormat = (song) =>
-      song.artist.padEnd(40, "") +
-      song.album.padEnd(20, "") +
-      song.track.toString().padStart(3, "0");
-
-    let songs = this.files
-      .filter((song) => song.genre === genre)
-      .sort((a, b) => genreFormat(a).localeCompare(genreFormat(b)));
-
-    this.player.changePlaylist(songs, play);
+    this.player.changePlaylist(files, play);
   }
 }
 </script>
