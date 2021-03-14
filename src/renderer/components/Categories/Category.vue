@@ -25,20 +25,20 @@ export default {
   props: {
     type: { required: true },
     cat: { required: true },
-    selected: { required: true },
+    selector: { required: true }
   },
 
   data() {
     return {
       goToTracker: {
         at: moment(),
-        input: "",
-      },
+        input: ""
+      }
     };
   },
 
   created() {
-    window.addEventListener("keyup", (event) => {
+    window.addEventListener("keyup", event => {
       if (!this.active) {
         return;
       }
@@ -57,26 +57,32 @@ export default {
   },
 
   computed: {
+    /** If the current category is being clicked/traversed */
     active() {
-      return this.selected.last === this.type;
+      return this.selector.last.category === this.type;
     },
 
     title() {
       return this.type.charAt(0).toUpperCase() + this.type.slice(1) + "s";
-    },
+    }
   },
 
   methods: {
     enterKeySelect() {
-      this.select(this.selected[this.type], true);
+      this.select(this.selector.get(this.type), true);
     },
 
     select(item, play) {
       this.$emit("select", this.type, item, play);
     },
 
+    /**
+     * If a given item in the category is selected
+     */
     isSelected(item) {
-      return this.selected[this.type] === item;
+      return (
+        (this.selector.get(this.type) || {})[this.type] === item[this.type]
+      );
     },
 
     goToSearch(event) {
@@ -94,24 +100,17 @@ export default {
     },
 
     goTo() {
-      let type = this.selected.last;
-      let regex = new RegExp("^" + this.goToTracker.input, "i");
-      let isAlbum = type === "album";
+      const regex = new RegExp("^" + this.goToTracker.input, "i");
 
-      let items = this.cat.list.filter((item) =>
-        regex.test(isAlbum ? item.album : item)
-      );
+      const items = this.cat.list.filter(item => regex.test(item[this.type]));
 
       if (!items.length) {
         return;
       }
 
-      let item = items[0];
-      let name = isAlbum ? item.album : item;
+      const item = items[0];
 
-      this.selected[type] = name;
-
-      location.hash = `#${type}-${name.replace(/\s/g, "_")}`;
+      this.setHash(item);
       this.select(item);
     },
 
@@ -119,12 +118,18 @@ export default {
       this.$emit("reset");
     },
 
+    setHash(item) {
+      location.hash = `#${this.type}-${this.cat
+        .display(item)
+        .replace(/\s/g, "_")}`;
+    },
+
     traverseCategory(direction) {
-      let item = this.selected[this.type];
+      let item = this.selector.get(this.type);
 
       let index = this.cat.list
-        .map((_item, i) => (_item === item ? i : null))
-        .filter((item) => item !== null)[0];
+        .map((_item, i) => (_item[this.type] === item[this.type] ? i : null))
+        .filter(item => item !== null)[0];
 
       let list = this.cat.list;
 
@@ -134,12 +139,11 @@ export default {
         item = list[index + 1];
       }
 
-      let display = this.cat.display(item);
+      this.selector.set(this.type, item);
 
-      location.hash = `#${this.type}-${display.replace(/\s/g, "_")}`;
-      this.select(item);
-    },
-  },
+      this.setHash(item);
+    }
+  }
 };
 </script>
 

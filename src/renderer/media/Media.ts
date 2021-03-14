@@ -11,13 +11,6 @@ export interface MediaMetaData {
   file_type: string;
 }
 
-/** Album specific sub-data */
-export interface AlbumData {
-  name: string;
-  artist: string;
-  year: string;
-}
-
 /** Summary of media type */
 export interface MediaTypeAggregateData {
   file_type: string;

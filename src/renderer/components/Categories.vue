@@ -5,7 +5,7 @@
       :type="type"
       :key="type"
       :cat="cat"
-      :selected="selected"
+      :selector="selector"
       @select="selectCategory"
       @reset="selected[type] = null"
     >
@@ -15,7 +15,7 @@
       <h5>Media</h5>
       <div class="items" id="category-media">
         <div
-          v-for="medium in this.transformer.media"
+          v-for="medium in this.transformer.media()"
           class="item"
           :key="medium.file_type"
         >
@@ -31,10 +31,11 @@
 import category from "./Categories/Category.vue";
 import { MediaMetaData } from "@/media/Media";
 import { Player } from "@/lib/Player";
+import { SelectionCategory, Selector } from "@/media/Selector";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
-import { media_transformations } from "@/media/Transform";
+import { mediaTransformations } from "@/media/Transform";
 
 @Component({ components: { category } })
 export default class CategoriesComponent extends Vue {
@@ -47,13 +48,8 @@ export default class CategoriesComponent extends Vue {
   /** All library files */
   files: MediaMetaData[] = [];
 
-  /** Currently selected media properties */
-  selected: Record<string, string> = {
-    artist: null,
-    album: null,
-    genre: null,
-    last: null,
-  };
+  /** Selects media based on categories like artist or album */
+  selector: Selector = new Selector();
 
   mounted() {
     /** Hack for now for the next little while */
@@ -69,78 +65,33 @@ export default class CategoriesComponent extends Vue {
   get categories() {
     return {
       artist: {
-        list: this.transformer.artists,
+        list: this.transformer.artists(),
         hasDefault: true,
-        display: (artist) => artist,
+        display: data => data.artist
       },
       album: {
-        list: this.transformer.albums(this.selected.artist),
+        list: this.transformer.albums(
+          this.selector.get("artist")?.artist ?? null
+        ),
         hasDefault: true,
-        display: (album) => album.name || "[Unknown Album]",
+        display: data => data.album || "[Unknown Album]"
       },
       genre: {
-        list: this.transformer.genres,
+        list: this.transformer.genres(),
         hasDefault: false,
-        display: (genre) => genre,
-      },
+        display: data => data.genre
+      }
     };
   }
 
-  get selectMethod() {
-    let str = this.selected.last;
-
-    return this["select" + str.charAt(0).toUpperCase() + str.slice(1)];
-  }
-
   get transformer() {
-    return media_transformations(this.files);
+    return mediaTransformations(this.files);
   }
 
-  selectCategory(type, item, play) {
-    this.selected[type] = item;
-    this.selected.last = type;
-    this.selectMethod(item, play);
-  }
+  selectCategory(type: SelectionCategory, item, play) {
+    const files = this.selector.select(type, item, this.files, this.settings);
 
-  selectArtist(artist, play = false) {
-    let songs = this.files
-      .filter((song) => song.artist === artist)
-      .sort((a, b) => (a.album + a.track).localeCompare(b.album + b.track));
-
-    this.player.changePlaylist(songs, play);
-  }
-
-  selectAlbum(album, play = false) {
-    let compilations_enabled = this.settings.has("compilationArtists");
-    let songs = this.files
-      .filter((song) => {
-        const show_compilations = compilations_enabled && !!album.name;
-        const show_unknown_album = !album.name && !this.selected.artist;
-        const artist_is_irrelevant = show_compilations || show_unknown_album;
-        const artist_match = artist_is_irrelevant
-          ? true
-          : song.artist === album.artist;
-
-        return (
-          song.album === album.name && song.year === album.year && artist_match
-        );
-      })
-      .sort((a, b) => Number(a.track) - Number(b.track));
-
-    this.player.changePlaylist(songs, play);
-  }
-
-  selectGenre(genre, play = false) {
-    const genreFormat = (song) =>
-      song.artist.padEnd(40, "") +
-      song.album.padEnd(20, "") +
-      song.track.toString().padStart(3, "0");
-
-    let songs = this.files
-      .filter((song) => song.genre === genre)
-      .sort((a, b) => genreFormat(a).localeCompare(genreFormat(b)));
-
-    this.player.changePlaylist(songs, play);
+    this.player.changePlaylist(files, play);
   }
 }
 </script>

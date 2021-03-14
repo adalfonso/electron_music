@@ -1,4 +1,5 @@
-import { AlbumData, MediaMetaData, MediaTypeAggregateData } from "./Media";
+import { MediaMetaData, MediaTypeAggregateData } from "./Media";
+import { CategoryData, SelectionCategory } from "./Selector";
 
 /**
  * Get a unique list of values based on a shared key
@@ -11,7 +12,7 @@ import { AlbumData, MediaMetaData, MediaTypeAggregateData } from "./Media";
 export const getUnique = (files: MediaMetaData[]) => (
   key: string
 ): string[] => {
-  return [...new Set(files.map((file) => file[key]))].sort();
+  return [...new Set(files.map(file => file[key]))].sort();
 };
 
 /**
@@ -24,24 +25,26 @@ export const getUnique = (files: MediaMetaData[]) => (
  */
 export const getUniqueAlbums = (files: MediaMetaData[]) => (
   artist: string = null
-): AlbumData[] => {
-  files = artist ? files.filter((song) => song.artist === artist) : files;
+): CategoryData[] => {
+  files = artist ? files.filter(song => song.artist === artist) : files;
 
   return files
     .reduce(
       (carry, file) => {
-        const { album: name, artist, year } = file;
+        const { album, artist, year } = file;
 
-        if (carry.names[name] === undefined) {
-          carry.names[name] = true;
-          carry.unique.push({ name, artist, year });
+        const key = `${album} - ${year}`;
+
+        if (carry.names[key] === undefined) {
+          carry.names[key] = true;
+          carry.unique.push({ album, artist, year });
         }
 
         return carry;
       },
       { names: {}, unique: [] }
     )
-    .unique.sort((a, b) => a.name.localeCompare(b.name));
+    .unique.sort((a, b) => a.album.localeCompare(b.album));
 };
 
 /**
@@ -65,7 +68,7 @@ export const getMediaTypeAggregateData = (
     .map(([file_type, count]) => ({
       file_type,
       count,
-      percent: ((count / files.length) * 100).toFixed(2),
+      percent: ((count / files.length) * 100).toFixed(2)
     }));
 };
 
@@ -76,9 +79,35 @@ export const getMediaTypeAggregateData = (
  *
  * @return transformed or means to transform files
  */
-export const media_transformations = (files: MediaMetaData[]) => ({
-  artists: getUnique(files)("artist"),
-  genres: getUnique(files)("genre"),
+export const mediaTransformations = (files: MediaMetaData[]) => ({
+  artists: () => mapCategory("artist")(getUnique(files)("artist")),
+  genres: () => mapCategory("genre")(getUnique(files)("genre")),
   albums: (artist: string) => getUniqueAlbums(files)(artist),
-  media: getMediaTypeAggregateData(files),
+  media: () => getMediaTypeAggregateData(files)
+});
+
+/**
+ * Stub a category value into CategoryData
+ *
+ * @param category - category to stub
+ * @param values   - a list of all values for that category
+ *
+ * @return stubbed CategoryData
+ **/
+const mapCategory = (category: SelectionCategory) => (
+  values: string[]
+): CategoryData[] =>
+  values.map(value => {
+    const thing = getMapTemplate();
+    thing[category] = value;
+
+    return thing;
+  });
+
+/** Get a dummy template for CategoryData */
+const getMapTemplate = () => ({
+  artist: null,
+  album: null,
+  genre: null,
+  year: null
 });
