@@ -1,88 +1,109 @@
 <template>
   <section class="seekbar-wrap">
     <div class="time">
-      <div class="current" v-show="player.current_time">{{ currentTime }}</div>
+      <div class="current" v-show="player.current_time">{{ current_time }}</div>
       <div class="duration" v-show="player.duration">{{ duration }}</div>
     </div>
 
     <div class="seeker">
-      <div class="seekbar" :style="style"></div>
+      <div class="seekbar" :style="seekbar_style"></div>
       <div
         class="phantom-seekbar"
         ref="phantomSeekbar"
-        @mousemove="move"
-        @mousedown="selectSeek"
-        @mouseleave="releaseSeek"
-        @mouseup="releaseSeek"
+        @mousemove="onMouseMove"
+        @mousedown="beginSeek"
+        @mouseleave="cancelSeek"
+        @mouseup="cancelSeek"
       ></div>
     </div>
   </section>
 </template>
 
-<script>
-export default {
-  props: {
-    player: { required: true },
-  },
+<script lang="ts">
+import { Player } from "@/lib/Player";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-  data() {
-    return {
-      seeking: false,
-      currentX: 0,
-    };
-  },
+@Component
+export default class SeekbarComponent extends Vue {
+  @Prop() player: Player;
 
-  computed: {
-    currentTime() {
-      return this.minutify(this.player.current_time);
-    },
+  /** If the seekbar is currently seeking */
+  is_seeking: boolean = false;
 
-    duration() {
-      return this.minutify(this.player.duration);
-    },
+  /** x-position of the seekbar */
+  seekbar_drag_x: number = 0;
 
-    style() {
-      let ratio = this.seeking
-        ? this.currentX / this.$refs.phantomSeekbar.clientWidth
-        : this.player.current_time / this.player.duration;
+  /**
+   * Get the phantom seekbar
+   *
+   * This is as an invisible overlay used to increase the clickable area
+   * of the seekbar
+   *
+   * TODO: if there is a better way to make TS aware of the type, prefer that.
+   */
+  get phantom_seekbar(): HTMLElement {
+    return this.$refs.phantomSeekbar as HTMLElement;
+  }
 
-      let percent = 100 - ratio * 100;
+  /** Current time to display on the seekbar */
+  get current_time(): string {
+    return this.minutify(this.player.current_time);
+  }
 
-      return "width:" + percent + "%";
-    },
-  },
+  /** Track duration to display on the seekbar */
+  get duration(): string {
+    return this.minutify(this.player.duration);
+  }
 
-  methods: {
-    minutify(time) {
-      let minutes = parseInt(Math.floor(time / 60));
-      let seconds = Math.round(time - minutes * 60);
-      return minutes + ":" + seconds.toString().padStart(2, "0");
-    },
+  /** Dynamic CSS of the seekbar */
+  get seekbar_style() {
+    const ratio = this.is_seeking
+      ? this.seekbar_drag_x / this.phantom_seekbar.clientWidth
+      : this.player.current_time / this.player.duration;
 
-    move(event) {
-      this.currentX = event.offsetX;
-    },
+    const percent = 100 - ratio * 100;
 
-    selectSeek(event) {
-      if (this.player.hasAudioSource()) {
-        this.seeking = true;
-      }
-    },
+    return `width: ${percent}%`;
+  }
 
-    releaseSeek(event) {
-      if (!this.seeking) {
-        return;
-      }
+  /**
+   * Convert a numeric time into a mm:ss
+   *
+   * @paramn time - numeric time
+   *
+   * @return formatted time
+   *
+   */
+  minutify(time: number) {
+    const minutes = Math.round(Math.floor(time / 60));
+    const seconds = Math.round(time - minutes * 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
 
-      let percent =
-        Math.min(event.offsetX) / this.$refs.phantomSeekbar.clientWidth;
+  /** Handle mouse move events */
+  onMouseMove(event: MouseEvent) {
+    this.seekbar_drag_x = event.offsetX;
+  }
 
-      this.player.goTo(percent);
+  /** Begin seek operation */
+  beginSeek() {
+    if (this.player.hasAudioSource()) {
+      this.is_seeking = true;
+    }
+  }
 
-      this.seeking = false;
-    },
-  },
-};
+  /** Cancel seek operation */
+  cancelSeek(event: MouseEvent) {
+    if (!this.is_seeking) {
+      return;
+    }
+
+    const percent = Math.min(event.offsetX) / this.phantom_seekbar.clientWidth;
+
+    this.player.goTo(percent);
+    this.is_seeking = false;
+  }
+}
 </script>
 
 <style lang="scss">

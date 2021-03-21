@@ -48,15 +48,15 @@ export default class PlaybackControlsComponent extends Vue {
   @Prop() player: Player;
 
   /** If the volume is currently being adjusted */
-  isAdjustingVolume: boolean = false;
+  is_adjusting_volume: boolean = false;
 
   /** x-position of the volume level */
-  volumeDragX: number = 0;
+  volume_drag_x: number = 0;
 
   /** Get CSS for the volume level */
   get volumeStyles() {
-    const volume = this.isAdjustingVolume
-      ? this.volumeDragX / this.phantomVolume.clientWidth
+    const volume = this.is_adjusting_volume
+      ? this.volume_drag_x / this.phantom_volume_bar.clientWidth
       : this.player.volume;
 
     return `width: ${volume * 100}%`;
@@ -65,45 +65,44 @@ export default class PlaybackControlsComponent extends Vue {
   /**
    * Get the phantom volume bar
    *
-   * This is used as an invisible overlay to work in conjunction with the main
-   * volume bar, although I am recently back in the code and can't remember
-   * exactly why this approach was needed.
+   * This is as an invisible overlay used to increase the clickable area
+   * of the volume bar
    *
    * TODO: if there is a better way to make TS aware of the type, prefer that.
-   *
    */
-  get phantomVolume(): HTMLElement {
+  get phantom_volume_bar(): HTMLElement {
     return this.$refs.phantomVolumeBar as HTMLElement;
   }
 
   /** Handle mouse move events  */
   onMouseMove(event: MouseEvent) {
-    this.volumeDragX = event.offsetX;
+    this.volume_drag_x = event.offsetX;
 
-    if (this.isAdjustingVolume) {
+    if (this.is_adjusting_volume) {
       this.adjustVolume(event);
     }
   }
 
   /** Start adjusting the volume */
   beginVolumeAdjust() {
-    this.isAdjustingVolume = true;
+    this.is_adjusting_volume = true;
   }
 
   /** Cancel the volume adjustment */
   cancelVolumeAdjust(event: MouseEvent) {
-    if (!this.isAdjustingVolume) {
+    if (!this.is_adjusting_volume) {
       return;
     }
 
     this.adjustVolume(event);
 
-    this.isAdjustingVolume = false;
+    this.is_adjusting_volume = false;
   }
 
   /** Cause a volume adjustment */
   adjustVolume(event: MouseEvent) {
-    const percent = Math.min(event.offsetX) / this.phantomVolume.clientWidth;
+    const percent =
+      Math.min(event.offsetX) / this.phantom_volume_bar.clientWidth;
 
     this.player.adjustVolume(percent);
   }
