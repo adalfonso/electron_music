@@ -65,4 +65,53 @@ describe("media/Transform", () => {
       expect(sut).to.deep.equal(expected);
     });
   });
+
+  describe("mediaTransformations", () => {
+    [
+      {
+        category: "artists",
+        expected: [
+          { album: null, artist: "Bazzler", genre: null, year: null },
+          { album: null, artist: "Bozzy", genre: null, year: null },
+          { album: null, artist: "The Bar", genre: null, year: null },
+          { album: null, artist: "The Foo", genre: null, year: null }
+        ]
+      },
+      {
+        category: "genres",
+        expected: [
+          { album: null, artist: null, genre: "Baz Baz", year: null },
+          { album: null, artist: null, genre: "BotBoz", year: null },
+          { album: null, artist: null, genre: "Foo Rock", year: null }
+        ]
+      },
+      {
+        category: "albums",
+        expected: [
+          { artist: "Bazzler", album: "", year: "2000" },
+          { artist: "The Bar", album: "Bar-ing Around", year: "2005" },
+          { artist: "Bazzler", album: "Baz", year: "2019" },
+          { artist: "Bozzy", album: "Booze", year: "2021" },
+          { album: "Foo-ing Around", artist: "The Foo", year: "1999" },
+          { album: "Foo-ing Around Again", artist: "The Foo", year: "2001" },
+          { artist: "Bazzler", album: "The Compilation", year: "2011" },
+          { artist: "Bazzler", album: "The Compilation", year: "2001" }
+        ]
+      },
+      {
+        category: "media",
+        expected: [
+          { file_type: "FLAC", count: 9, percent: "75.00" },
+          { file_type: "MP3", count: 2, percent: "16.67" },
+          { file_type: "M4A", count: 1, percent: "8.33" }
+        ]
+      }
+    ].forEach(({ category, expected }) => {
+      it(`transforms ${category}`, () => {
+        const sut = Sut.mediaTransformations(getFiles());
+
+        expect(sut[category]()).to.deep.equal(expected);
+      });
+    });
+  });
 });
