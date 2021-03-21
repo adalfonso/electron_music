@@ -3,7 +3,7 @@
     <section id="file-browser" @click.stop>
       <h3>Browse for files</h3>
 
-      <input type="file" webkitdirectory @change="select" />
+      <input type="file" webkitdirectory @change="crawl" />
 
       <p v-if="crawler.is_busy && crawler.current_file">
         <b>Crawling: {{ crawler.current_file }}</b>
@@ -19,13 +19,20 @@ import { library_store } from "@/index";
 
 @Component
 export default class FileBrowserComponent extends Vue {
+  /** Traverses local files and stores metadata in data store */
   crawler: Crawler = new Crawler(library_store);
 
+  /** Emit a hide event to the parent */
   hide() {
     this.$emit("hide");
   }
 
-  select(event: Event) {
+  /**
+   * Initate crawler based on a file input
+   *
+   * @param event - file input event
+   */
+  crawl(event: Event) {
     const target = event.target as HTMLInputElement;
     this.crawler.crawl(Array.from(target.files));
   }
