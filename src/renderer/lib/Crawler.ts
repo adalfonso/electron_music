@@ -3,6 +3,15 @@ import mm from "musicmetadata";
 import { Datastore } from "@/data/Datastore";
 import { MediaMetaData } from "@/media/Media";
 
+interface MetaDataResult {
+  path: string;
+  meta: MM.Metadata;
+}
+
+interface FileHandle {
+  path: string;
+}
+
 /**
  * Reads a directory on disk, extracts meta data and stores
  */
@@ -35,7 +44,7 @@ export class Crawler {
    *
    * @return promise to indicate when operation completes
    */
-  public async crawl(files): Promise<void> {
+  public async crawl(files: FileHandle[]): Promise<void> {
     try {
       // let's clear existing files when this runs
       await this._db.remove({}, { multi: true });
@@ -69,7 +78,8 @@ export class Crawler {
         }).catch(console.log)
       );
 
-    return Promise.all(processing).then(result => {
+    // TODO: This assumes there are no errors
+    return Promise.all(processing).then((result: MetaDataResult[]) => {
       this.insert(this.processFiles(result));
     });
   }
@@ -94,7 +104,7 @@ export class Crawler {
    *
    * @return converted meta data
    */
-  processFiles(files): MediaMetaData[] {
+  processFiles(files: MetaDataResult[]): MediaMetaData[] {
     return files.map(file => {
       return {
         path: file.path.replace(/\\/g, "/"),
@@ -103,7 +113,7 @@ export class Crawler {
         duration: file.meta.duration,
         genre: file.meta.genre[0],
         title: file.meta.title,
-        track: file.meta.track.no,
+        track: file.meta.track.no.toString(),
         year: file.meta.year,
         file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase()
       };

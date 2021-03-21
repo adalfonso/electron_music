@@ -3,7 +3,7 @@ export interface MediaMetaData {
   path: string;
   artist: string;
   album: string;
-  duration: string;
+  duration: number;
   genre: string;
   title: string;
   track: string;

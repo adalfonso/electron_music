@@ -89,7 +89,11 @@ export class Selector {
   private _selectArtist(data: CategoryData, files: MediaMetaData[]) {
     return files
       .filter(file => file.artist === data.artist)
-      .sort((a, b) => (a.album + a.track).localeCompare(b.album + b.track));
+      .sort((a, b) =>
+        (a.album + a.track.padStart(2, "0")).localeCompare(
+          b.album + b.track.padStart(2, "0")
+        )
+      );
   }
 
   /**
