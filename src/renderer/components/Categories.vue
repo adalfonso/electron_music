@@ -29,9 +29,9 @@
 
 <script lang="ts">
 import category from "./Categories/Category.vue";
+import { CategoryData, SelectionCategory, Selector } from "@/media/Selector";
 import { MediaMetaData } from "@/media/Media";
 import { Player } from "@/lib/Player";
-import { SelectionCategory, Selector } from "@/media/Selector";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
@@ -62,6 +62,11 @@ export default class CategoriesComponent extends Vue {
     }, 5000);
   }
 
+  /**
+   * Group files into categories and provide means to view
+   *
+   * TODO: Move busines logic out of this component
+   */
   get categories() {
     return {
       artist: {
@@ -84,12 +89,29 @@ export default class CategoriesComponent extends Vue {
     };
   }
 
+  /** Used ot transform media files into selection category data */
   get transformer() {
     return mediaTransformations(this.files);
   }
 
-  selectCategory(type: SelectionCategory, item, play) {
-    const files = this.selector.select(type, item, this.files, this.settings);
+  /**
+   * Select a new category
+   *
+   * @param category - category type, e.g. artist, album, genre
+   * @param data     - basic data about category selection
+   * @param play     - if playback should start immediately
+   */
+  selectCategory(
+    category: SelectionCategory,
+    data: CategoryData,
+    play: boolean
+  ) {
+    const files = this.selector.select(
+      category,
+      data,
+      this.files,
+      this.settings
+    );
 
     this.player.changePlaylist(files, play);
   }
