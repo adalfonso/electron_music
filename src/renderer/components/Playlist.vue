@@ -24,59 +24,64 @@
 
         <!-- TODO: use a unique ID for key -->
         <tr
-          v-for="(song, index) in songs"
+          v-for="(file, index) in files"
           :class="indexClass(index)"
           @click="player.changeIndex(index)"
-          :key="song.artist + song.title + index"
+          :key="file.artist + file.title + index"
         >
-          <td>{{ song.artist }}</td>
-          <td>{{ song.album }}</td>
-          <td>{{ song.year }}</td>
+          <td>{{ file.artist }}</td>
+          <td>{{ file.album }}</td>
+          <td>{{ file.year }}</td>
           <td>
-            {{ song.title.substring(0, 50).trim() }}
-            {{ song.title.length > 50 ? "..." : "" }}
+            {{ file.title.substring(0, 50).trim() }}
+            {{ file.title.length > 50 ? "..." : "" }}
           </td>
-          <td>{{ song.track }}</td>
+          <td>{{ file.track }}</td>
         </tr>
       </table>
     </div>
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import { PlaylistState } from "../lib/Playlist";
-export default {
-  props: {
-    player: { required: true },
-  },
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { Player } from "@/lib/Player";
 
-  data() {
-    return {
-      states: PlaylistState,
-    };
-  },
+@Component
+export default class PlaylistComponent extends Vue {
+  /** Audio player */
+  @Prop() player: Player;
 
-  computed: {
-    songs() {
-      return this.playlist.getVisibleList();
-    },
+  /** Possibly playlist states */
+  states = PlaylistState;
 
-    playlist() {
-      return this.player.playlist;
-    },
-  },
+  /** Get the files of the playlist */
+  get files() {
+    return this.playlist.getVisibleList();
+  }
 
-  methods: {
-    indexClass(index) {
-      // If we are browsing, no tracks will have a special class
-      if (this.playlist.isBrowsing()) {
-        return "";
-      }
+  /** Get the current playlist */
+  get playlist() {
+    return this.player.playlist;
+  }
 
-      return index === this.playlist.index ? "selected" : "";
-    },
-  },
-};
+  /**
+   * Get the class for an index in the playlist
+   *
+   * @param index - index number
+   *
+   * @return classes
+   */
+  indexClass(index: number): string {
+    // If we are browsing, no tracks will have a special class
+    if (this.playlist.isBrowsing()) {
+      return "";
+    }
+
+    return index === this.playlist.index ? "selected" : "";
+  }
+}
 </script>
 
 <style lang="scss">
