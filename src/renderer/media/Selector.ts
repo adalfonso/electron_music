@@ -1,5 +1,5 @@
-import Settings from "@/lib/Settings";
 import { MediaMetaData } from "./Media";
+import { Settings } from "@/lib/Settings";
 
 /** Allowed selection types */
 export type SelectionCategory = "artist" | "genre" | "album";

@@ -18,32 +18,33 @@
       Random
     </div>
 
-    <file-browser v-if="browsing" @hide="browsing = false"> </file-browser>
+    <file-browser v-if="is_browsing" @hide="is_browsing = false">
+    </file-browser>
   </section>
 </template>
 
-<script>
-import fileBrowser from "./FileMenu/FileBrowser.vue";
+<script lang="ts">
+import FileBrowserComponent from "./FileMenu/FileBrowser.vue";
+import { Settings } from "@/lib/Settings";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
-  components: { fileBrowser },
+@Component({
+  components: {
+    "file-browser": FileBrowserComponent
+  }
+})
+export default class FileMenuComponent extends Vue {
+  /** User settings */
+  @Prop() settings: Settings;
 
-  props: {
-    settings: { required: true },
-  },
+  /** If the user is currently browsing */
+  is_browsing: boolean = false;
 
-  data() {
-    return {
-      browsing: false,
-    };
-  },
-
-  methods: {
-    browse() {
-      this.browsing = true;
-    },
-  },
-};
+  /** Start browsing */
+  browse() {
+    this.is_browsing = true;
+  }
+}
 </script>
 
 <style lang="scss">

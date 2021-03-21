@@ -6,7 +6,7 @@ import {
 import { expect } from "chai";
 import { getFiles } from "./common";
 import { MediaMetaData } from "@/media/Media";
-import Settings from "@/lib/Settings";
+import { Settings } from "@/lib/Settings";
 
 describe("media/Selector", () => {
   describe("set/get (selections)", () => {

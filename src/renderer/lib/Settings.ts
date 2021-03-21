@@ -33,7 +33,7 @@ export class Settings {
    */
   public has(setting_name: string): boolean {
     const settings = this.local_store.filter(
-      (setting) => setting.name === setting_name
+      setting => setting.name === setting_name
     );
 
     return settings.length && settings[0].value;
@@ -74,5 +74,3 @@ export class Settings {
     }
   }
 }
-
-export default Settings;

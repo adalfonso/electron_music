@@ -19,7 +19,7 @@ import playlist from "./components/Playlist.vue";
 import toolbar from "./components/Toolbar.vue";
 import { Player } from "@/lib/Player";
 import { Playlist } from "@/lib/Playlist";
-import Settings from "@/lib/Settings";
+import { Settings } from "@/lib/Settings";
 import { settings_store } from "@/index";
 
 export default {
@@ -28,9 +28,9 @@ export default {
   data() {
     return {
       player: new Player(new Playlist([])),
-      settings: new Settings(settings_store),
+      settings: new Settings(settings_store)
     };
-  },
+  }
 };
 </script>
 
