@@ -9,27 +9,30 @@
       </h2>
 
       <seekbar :player="player"></seekbar>
-      <playbackControls :player="player"></playbackControls>
+      <playback-controls :player="player"></playback-controls>
     </template>
   </section>
 </template>
 
 <script>
-import playbackControls from "./Toolbar/PlaybackControls.vue";
-import seekbar from "./Toolbar/Seekbar.vue";
+import PlaybackControlsComponent from "./Toolbar/PlaybackControls.vue";
+import SeekbarComponent from "./Toolbar/Seekbar.vue";
 
 export default {
-  components: { playbackControls, seekbar },
+  components: {
+    "playback-controls": PlaybackControlsComponent,
+    seekbar: SeekbarComponent
+  },
 
   props: {
-    player: { required: true },
+    player: { required: true }
   },
 
   computed: {
     nowPlaying() {
       return this.player.playlist.now_playing;
-    },
-  },
+    }
+  }
 };
 </script>
 

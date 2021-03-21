@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import category from "./Categories/Category.vue";
+import CategoryComponent from "./Categories/Category.vue";
 import { CategoryData, SelectionCategory, Selector } from "@/media/Selector";
 import { MediaMetaData } from "@/media/Media";
 import { Player } from "@/lib/Player";
@@ -43,7 +43,7 @@ export interface Category {
   display: (data: CategoryData) => string;
 }
 
-@Component({ components: { category } })
+@Component({ components: { category: CategoryComponent } })
 export default class CategoriesComponent extends Vue {
   /** Audio player */
   @Prop() player: Player;

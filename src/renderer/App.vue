@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="wrap">
-      <fileMenu :settings="settings"> </fileMenu>
+      <file-menu :settings="settings"> </file-menu>
 
       <categories :player="player" :settings="settings"> </categories>
 
@@ -13,17 +13,22 @@
 </template>
 
 <script>
-import fileMenu from "./components/FileMenu.vue";
-import categories from "./components/Categories.vue";
-import playlist from "./components/Playlist.vue";
-import toolbar from "./components/Toolbar.vue";
+import CategoriesComponent from "./components/Categories.vue";
+import FileMenuComponent from "./components/FileMenu.vue";
+import PlaylistComponent from "./components/Playlist.vue";
+import ToolbarComponent from "./components/Toolbar.vue";
 import { Player } from "@/lib/Player";
 import { Playlist } from "@/lib/Playlist";
 import { Settings } from "@/lib/Settings";
 import { settings_store } from "@/index";
 
 export default {
-  components: { fileMenu, categories, playlist, toolbar },
+  components: {
+    "file-menu": FileMenuComponent,
+    categories: CategoriesComponent,
+    playlist: PlaylistComponent,
+    toolbar: ToolbarComponent
+  },
 
   data() {
     return {
