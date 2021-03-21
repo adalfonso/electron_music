@@ -4,7 +4,7 @@
       v-for="(cat, type) in categories"
       :type="type"
       :key="type"
-      :cat="cat"
+      :category="cat"
       :selector="selector"
       @select="selectCategory"
       @reset="selected[type] = null"
@@ -37,6 +37,12 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
 import { mediaTransformations } from "@/media/Transform";
 
+export interface Category {
+  list: CategoryData[];
+  hasDefault: boolean;
+  display: (data: CategoryData) => string;
+}
+
 @Component({ components: { category } })
 export default class CategoriesComponent extends Vue {
   /** Audio player */
@@ -67,7 +73,7 @@ export default class CategoriesComponent extends Vue {
    *
    * TODO: Move busines logic out of this component
    */
-  get categories() {
+  get categories(): Record<string, Category> {
     return {
       artist: {
         list: this.transformer.artists(),
