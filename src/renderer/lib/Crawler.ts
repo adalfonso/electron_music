@@ -53,10 +53,10 @@ export class Crawler {
      * this operation.
      */
     const processing = files
-      .map((file) => file.path)
-      .map((path) =>
+      .map(file => file.path)
+      .map(path =>
         new Promise((resolve, reject) => {
-          let readableStream = fs.createReadStream(path);
+          const readableStream = fs.createReadStream(path);
           this._current_file = path;
 
           mm(readableStream, (error, meta) => {
@@ -69,7 +69,7 @@ export class Crawler {
         }).catch(console.log)
       );
 
-    return Promise.all(processing).then((result) => {
+    return Promise.all(processing).then(result => {
       this.insert(this.processFiles(result));
     });
   }
@@ -95,7 +95,7 @@ export class Crawler {
    * @return converted meta data
    */
   processFiles(files): MediaMetaData[] {
-    return files.map((file) => {
+    return files.map(file => {
       return {
         path: file.path.replace(/\\/g, "/"),
         artist: file.meta.artist[0],
@@ -105,7 +105,7 @@ export class Crawler {
         title: file.meta.title,
         track: file.meta.track.no,
         year: file.meta.year,
-        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase(),
+        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase()
       };
     });
   }

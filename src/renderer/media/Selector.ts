@@ -125,7 +125,7 @@ export class Selector {
     files: MediaMetaData[],
     settings: Settings
   ) {
-    let compilations_enabled = settings.has("compilationArtists");
+    const compilations_enabled = settings.has("compilationArtists");
 
     return files
       .filter(f => {

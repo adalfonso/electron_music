@@ -25,73 +25,89 @@
 
     <section class="volume-wrap">
       <div class="volume-control">
-        <div class="volumeBar" :style="style"></div>
+        <div class="volume-bar" :style="volumeStyles"></div>
         <div
-          class="phantom-volumeBar"
+          class="phantom-volume-bar"
           ref="phantomVolumeBar"
-          @mousemove="move"
-          @mousedown="selectVolume"
-          @mouseleave="releaseVolume"
-          @mouseup="releaseVolume"
+          @mousemove="onMouseMove"
+          @mousedown="beginVolumeAdjust"
+          @mouseleave="cancelVolumeAdjust"
+          @mouseup="cancelVolumeAdjust"
         ></div>
       </div>
     </section>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    player: { required: true },
-  },
+<script lang="ts">
+import { Player } from "@/lib/Player";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-  data() {
-    return {
-      adjustingVolume: false,
-      currentX: 0,
-    };
-  },
+@Component
+export default class PlaybackControlsComponent extends Vue {
+  @Prop() player: Player;
 
-  computed: {
-    style() {
-      let volume = this.adjustingVolume
-        ? this.currentX / this.$refs.phantomVolumeBar.clientWidth
-        : this.player.volume;
+  /** If the volume is currently being adjusted */
+  isAdjustingVolume: boolean = false;
 
-      return "width:" + volume * 100 + "%";
-    },
-  },
+  /** x-position of the volume level */
+  volumeDragX: number = 0;
 
-  methods: {
-    move(event) {
-      this.currentX = event.offsetX;
+  /** Get CSS for the volume level */
+  get volumeStyles() {
+    const volume = this.isAdjustingVolume
+      ? this.volumeDragX / this.phantomVolume.clientWidth
+      : this.player.volume;
 
-      if (this.adjustingVolume) {
-        let percent =
-          Math.min(event.offsetX) / this.$refs.phantomVolumeBar.clientWidth;
+    return `width: ${volume * 100}%`;
+  }
 
-        this.player.adjustVolume(percent);
-      }
-    },
+  /**
+   * Get the phantom volume bar
+   *
+   * This is used as an invisible overlay to work in conjunction with the main
+   * volume bar, although I am recently back in the code and can't remember
+   * exactly why this approach was needed.
+   *
+   * TODO: if there is a better way to make TS aware of the type, prefer that.
+   *
+   */
+  get phantomVolume(): HTMLElement {
+    return this.$refs.phantomVolumeBar as HTMLElement;
+  }
 
-    selectVolume(event) {
-      this.adjustingVolume = true;
-    },
+  /** Handle mouse move events  */
+  onMouseMove(event: MouseEvent) {
+    this.volumeDragX = event.offsetX;
 
-    releaseVolume(event) {
-      if (!this.adjustingVolume) {
-        return;
-      }
+    if (this.isAdjustingVolume) {
+      this.adjustVolume(event);
+    }
+  }
 
-      let percent =
-        Math.min(event.offsetX) / this.$refs.phantomVolumeBar.clientWidth;
+  /** Start adjusting the volume */
+  beginVolumeAdjust() {
+    this.isAdjustingVolume = true;
+  }
 
-      this.player.adjustVolume(percent);
+  /** Cancel the volume adjustment */
+  cancelVolumeAdjust(event: MouseEvent) {
+    if (!this.isAdjustingVolume) {
+      return;
+    }
 
-      this.adjustingVolume = false;
-    },
-  },
-};
+    this.adjustVolume(event);
+
+    this.isAdjustingVolume = false;
+  }
+
+  /** Cause a volume adjustment */
+  adjustVolume(event: MouseEvent) {
+    const percent = Math.min(event.offsetX) / this.phantomVolume.clientWidth;
+
+    this.player.adjustVolume(percent);
+  }
+}
 </script>
 
 <style lang="scss">
@@ -218,13 +234,13 @@ export default {
     margin: 0.5rem 1rem;
     width: 10rem;
 
-    .volumeBar {
+    .volume-bar {
       background: $light-blue;
       height: 100%;
       position: absolute;
     }
 
-    .phantom-volumeBar {
+    .phantom-volume-bar {
       bottom: -1rem;
       cursor: pointer;
       left: 0;
