@@ -21,18 +21,18 @@ import SeekbarComponent from "./Toolbar/Seekbar.vue";
 export default {
   components: {
     "playback-controls": PlaybackControlsComponent,
-    seekbar: SeekbarComponent
+    seekbar: SeekbarComponent,
   },
 
   props: {
-    player: { required: true }
+    player: { required: true },
   },
 
   computed: {
     nowPlaying() {
       return this.player.playlist.now_playing;
-    }
-  }
+    },
+  },
 };
 </script>
 

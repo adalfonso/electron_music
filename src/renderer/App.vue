@@ -27,15 +27,15 @@ export default {
     "file-menu": FileMenuComponent,
     categories: CategoriesComponent,
     playlist: PlaylistComponent,
-    toolbar: ToolbarComponent
+    toolbar: ToolbarComponent,
   },
 
   data() {
     return {
       player: new Player(new Playlist([])),
-      settings: new Settings(settings_store)
+      settings: new Settings(settings_store),
     };
-  }
+  },
 };
 </script>
 

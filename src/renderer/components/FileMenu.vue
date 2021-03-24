@@ -30,8 +30,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
   components: {
-    "file-browser": FileBrowserComponent
-  }
+    "file-browser": FileBrowserComponent,
+  },
 })
 export default class FileMenuComponent extends Vue {
   /** User settings */

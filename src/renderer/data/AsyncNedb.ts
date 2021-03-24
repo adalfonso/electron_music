@@ -11,7 +11,7 @@ import { remote } from "electron";
  * @return datastore
  */
 const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
-  find: (query) =>
+  find: query =>
     new Promise((resolve, reject) => {
       db.find(query, (error, docs) => {
         if (error) {
@@ -22,7 +22,7 @@ const createAsyncNedb = <T>(db: Nedb): Datastore<T> => ({
       });
     }),
 
-  insert: (docs) =>
+  insert: docs =>
     new Promise((resolve, reject) => {
       db.insert(docs, (error, docs) => {
         if (error) {

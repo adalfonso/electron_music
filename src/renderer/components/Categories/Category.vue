@@ -43,7 +43,7 @@ export default class CategoryComponent extends Vue {
   /** Tracks text searches in the category */
   textSearch = {
     lastInput: moment(),
-    input: ""
+    input: "",
   };
 
   created() {

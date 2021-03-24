@@ -10,7 +10,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Foo You Too",
     track: "1",
     year: "1999",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "foo1.flac",
@@ -21,7 +21,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Foo You Too Again",
     track: "2",
     year: "1999",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "bar.flac",
@@ -32,7 +32,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Barbie Girl",
     track: "1",
     year: "2005",
-    file_type: "MP3"
+    file_type: "MP3",
   },
   {
     path: "boz.flac",
@@ -43,7 +43,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Bonzon",
     track: "1",
     year: "2021",
-    file_type: "M4A"
+    file_type: "M4A",
   },
   {
     path: "baz.flac",
@@ -54,7 +54,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Bazly",
     track: "1",
     year: "2019",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "baz1.flac",
@@ -65,7 +65,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Bazly",
     track: "2",
     year: "2019",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "foo3.flac",
@@ -76,7 +76,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Fook",
     track: "1",
     year: "2001",
-    file_type: "MP3"
+    file_type: "MP3",
   },
   {
     path: "baz2.flac",
@@ -87,7 +87,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Bazlish",
     track: "1",
     year: "2011",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "foo4.flac",
@@ -98,7 +98,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Foot",
     track: "2",
     year: "2011",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "baz3.flac",
@@ -109,7 +109,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "This is a different compilation",
     track: "1",
     year: "2001",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "baz4.flac",
@@ -120,7 +120,7 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Bazlishli",
     track: "1",
     year: "2000",
-    file_type: "FLAC"
+    file_type: "FLAC",
   },
   {
     path: "foo5.flac",
@@ -131,6 +131,6 @@ export const getFiles = (): MediaMetaData[] => [
     title: "Footl",
     track: "2",
     year: "2000",
-    file_type: "FLAC"
-  }
+    file_type: "FLAC",
+  },
 ];

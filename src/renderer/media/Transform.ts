@@ -68,7 +68,7 @@ export const getMediaTypeAggregateData = (
     .map(([file_type, count]) => ({
       file_type,
       count,
-      percent: ((count / files.length) * 100).toFixed(2)
+      percent: ((count / files.length) * 100).toFixed(2),
     }));
 };
 
@@ -83,7 +83,7 @@ export const mediaTransformations = (files: MediaMetaData[]) => ({
   artists: () => mapCategory("artist")(getUnique(files)("artist")),
   genres: () => mapCategory("genre")(getUnique(files)("genre")),
   albums: (artist: string) => getUniqueAlbums(files)(artist),
-  media: () => getMediaTypeAggregateData(files)
+  media: () => getMediaTypeAggregateData(files),
 });
 
 /**
@@ -109,5 +109,5 @@ const getMapTemplate = () => ({
   artist: null,
   album: null,
   genre: null,
-  year: null
+  year: null,
 });

@@ -7,7 +7,7 @@ describe("media/Transform", () => {
     const expected = {
       artist: ["Bazzler", "Bozzy", "The Bar", "The Foo"],
       genre: ["Baz Baz", "BotBoz", "Foo Rock"],
-      year: ["1999", "2000", "2001", "2005", "2011", "2019", "2021"]
+      year: ["1999", "2000", "2001", "2005", "2011", "2019", "2021"],
     };
 
     it("gets a unique file key", () => {
@@ -30,7 +30,7 @@ describe("media/Transform", () => {
         { album: "Foo-ing Around", artist: "The Foo", year: "1999" },
         { album: "Foo-ing Around Again", artist: "The Foo", year: "2001" },
         { artist: "Bazzler", album: "The Compilation", year: "2011" },
-        { artist: "Bazzler", album: "The Compilation", year: "2001" }
+        { artist: "Bazzler", album: "The Compilation", year: "2001" },
       ];
 
       const sut = Sut.getUniqueAlbums(getFiles());
@@ -43,7 +43,7 @@ describe("media/Transform", () => {
         { artist: "The Foo", album: "", year: "2000" },
         { album: "Foo-ing Around", artist: "The Foo", year: "1999" },
         { album: "Foo-ing Around Again", artist: "The Foo", year: "2001" },
-        { artist: "The Foo", album: "The Compilation", year: "2011" }
+        { artist: "The Foo", album: "The Compilation", year: "2011" },
       ];
 
       const sut = Sut.getUniqueAlbums(getFiles());
@@ -57,7 +57,7 @@ describe("media/Transform", () => {
       const expected = [
         { count: 9, file_type: "FLAC", percent: "75.00" },
         { count: 2, file_type: "MP3", percent: "16.67" },
-        { count: 1, file_type: "M4A", percent: "8.33" }
+        { count: 1, file_type: "M4A", percent: "8.33" },
       ];
 
       const sut = Sut.getMediaTypeAggregateData(getFiles());
@@ -74,16 +74,16 @@ describe("media/Transform", () => {
           { album: null, artist: "Bazzler", genre: null, year: null },
           { album: null, artist: "Bozzy", genre: null, year: null },
           { album: null, artist: "The Bar", genre: null, year: null },
-          { album: null, artist: "The Foo", genre: null, year: null }
-        ]
+          { album: null, artist: "The Foo", genre: null, year: null },
+        ],
       },
       {
         category: "genres",
         expected: [
           { album: null, artist: null, genre: "Baz Baz", year: null },
           { album: null, artist: null, genre: "BotBoz", year: null },
-          { album: null, artist: null, genre: "Foo Rock", year: null }
-        ]
+          { album: null, artist: null, genre: "Foo Rock", year: null },
+        ],
       },
       {
         category: "albums",
@@ -95,17 +95,17 @@ describe("media/Transform", () => {
           { album: "Foo-ing Around", artist: "The Foo", year: "1999" },
           { album: "Foo-ing Around Again", artist: "The Foo", year: "2001" },
           { artist: "Bazzler", album: "The Compilation", year: "2011" },
-          { artist: "Bazzler", album: "The Compilation", year: "2001" }
-        ]
+          { artist: "Bazzler", album: "The Compilation", year: "2001" },
+        ],
       },
       {
         category: "media",
         expected: [
           { file_type: "FLAC", count: 9, percent: "75.00" },
           { file_type: "MP3", count: 2, percent: "16.67" },
-          { file_type: "M4A", count: 1, percent: "8.33" }
-        ]
-      }
+          { file_type: "M4A", count: 1, percent: "8.33" },
+        ],
+      },
     ].forEach(({ category, expected }) => {
       it(`transforms ${category}`, () => {
         const sut = Sut.mediaTransformations(getFiles());

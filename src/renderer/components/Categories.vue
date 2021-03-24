@@ -78,20 +78,20 @@ export default class CategoriesComponent extends Vue {
       artist: {
         list: this.transformer.artists(),
         hasDefault: true,
-        display: data => data.artist
+        display: data => data.artist,
       },
       album: {
         list: this.transformer.albums(
           this.selector.get("artist")?.artist ?? null
         ),
         hasDefault: true,
-        display: data => data.album || "[Unknown Album]"
+        display: data => data.album || "[Unknown Album]",
       },
       genre: {
         list: this.transformer.genres(),
         hasDefault: false,
-        display: data => data.genre
-      }
+        display: data => data.genre,
+      },
     };
   }
 

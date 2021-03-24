@@ -10,7 +10,8 @@
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-    "test": "nyc -e .ts -x \"*.test.ts\" cross-env TS_NODE_PROJECT='./tests/tsconfig.json' mocha -r ts-node/register tests/**/*.test.ts"
+    "test": "nyc -e .ts -x \"*.test.ts\" cross-env TS_NODE_PROJECT='./tests/tsconfig.json' mocha -r ts-node/register tests/**/*.test.ts",
+    "format": "prettier --write {src,tests}/**/*.{ts,vue}"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

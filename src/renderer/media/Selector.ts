@@ -17,7 +17,7 @@ export class Selector {
   private _selection: Record<SelectionCategory, CategoryData> = {
     artist: null,
     genre: null,
-    album: null
+    album: null,
   };
 
   /** Last media category selected; default to artist */
@@ -49,7 +49,7 @@ export class Selector {
   public get last() {
     return {
       category: this._last_selected,
-      value: this._selection[this._last_selected]
+      value: this._selection[this._last_selected],
     };
   }
 
@@ -74,7 +74,7 @@ export class Selector {
     return {
       artist: () => this._selectArtist(data, files),
       genre: () => this._selectGenre(data, files),
-      album: () => this._selectAlbum(data, files, settings)
+      album: () => this._selectAlbum(data, files, settings),
     }[this._last_selected]();
   }
 

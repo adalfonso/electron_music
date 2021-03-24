@@ -115,7 +115,7 @@ export class Crawler {
         title: file.meta.title,
         track: file.meta.track.no.toString(),
         year: file.meta.year,
-        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase()
+        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase(),
       };
     });
   }

@@ -1,7 +1,7 @@
 import {
   CategoryData,
   SelectionCategory,
-  Selector as Sut
+  Selector as Sut,
 } from "../../../src/renderer/media/Selector";
 import { expect } from "chai";
 import { getFiles } from "./common";
@@ -13,12 +13,12 @@ describe("media/Selector", () => {
     [
       {
         category: <SelectionCategory>"artist",
-        value: <CategoryData>(<unknown>"fooartist")
+        value: <CategoryData>(<unknown>"fooartist"),
       },
       {
         category: <SelectionCategory>"genre",
-        value: <CategoryData>(<unknown>"fooagenre")
-      }
+        value: <CategoryData>(<unknown>"fooagenre"),
+      },
     ].forEach(expected => {
       it(`sets and gets ${expected.category}`, () => {
         const sut = new Sut();
@@ -51,7 +51,7 @@ describe("media/Selector", () => {
             title: "Footl",
             track: "2",
             year: "2000",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "foo3.flac",
@@ -62,7 +62,7 @@ describe("media/Selector", () => {
             title: "Fook",
             track: "1",
             year: "2001",
-            file_type: "MP3"
+            file_type: "MP3",
           },
           {
             path: "foo.flac",
@@ -73,7 +73,7 @@ describe("media/Selector", () => {
             title: "Foo You Too",
             track: "1",
             year: "1999",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "foo1.flac",
@@ -84,7 +84,7 @@ describe("media/Selector", () => {
             title: "Foo You Too Again",
             track: "2",
             year: "1999",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             album: "The Compilation",
@@ -95,9 +95,9 @@ describe("media/Selector", () => {
             path: "foo4.flac",
             title: "Foot",
             track: "2",
-            year: "2011"
-          }
-        ]
+            year: "2011",
+          },
+        ],
       },
       {
         category: "genre",
@@ -111,7 +111,7 @@ describe("media/Selector", () => {
             title: "Bazlishli",
             track: "1",
             year: "2000",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "baz.flac",
@@ -122,7 +122,7 @@ describe("media/Selector", () => {
             title: "Bazly",
             track: "1",
             year: "2019",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "baz1.flac",
@@ -133,7 +133,7 @@ describe("media/Selector", () => {
             title: "Bazly",
             track: "2",
             year: "2019",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "baz2.flac",
@@ -144,7 +144,7 @@ describe("media/Selector", () => {
             title: "Bazlish",
             track: "1",
             year: "2011",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "baz3.flac",
@@ -155,10 +155,10 @@ describe("media/Selector", () => {
             title: "This is a different compilation",
             track: "1",
             year: "2001",
-            file_type: "FLAC"
-          }
-        ]
-      }
+            file_type: "FLAC",
+          },
+        ],
+      },
     ];
 
     tests.forEach(({ category, expected }) => {
@@ -193,7 +193,7 @@ describe("media/Selector", () => {
             title: "Bazly",
             track: "1",
             year: "2019",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "baz1.flac",
@@ -204,10 +204,10 @@ describe("media/Selector", () => {
             title: "Bazly",
             track: "2",
             year: "2019",
-            file_type: "FLAC"
-          }
+            file_type: "FLAC",
+          },
         ],
-        settings: {}
+        settings: {},
       },
       {
         label: "selects files for compilation album",
@@ -222,7 +222,7 @@ describe("media/Selector", () => {
             title: "Bazlish",
             track: "1",
             year: "2011",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "foo4.flac",
@@ -233,12 +233,12 @@ describe("media/Selector", () => {
             title: "Foot",
             track: "2",
             year: "2011",
-            file_type: "FLAC"
-          }
+            file_type: "FLAC",
+          },
         ],
         settings: {
-          compilationArtists: true
-        }
+          compilationArtists: true,
+        },
       },
       {
         label: "selects files for compilation album only for the artist",
@@ -253,12 +253,12 @@ describe("media/Selector", () => {
             title: "Foot",
             track: "2",
             year: "2011",
-            file_type: "FLAC"
-          }
+            file_type: "FLAC",
+          },
         ],
         settings: {
-          compilationArtists: false
-        }
+          compilationArtists: false,
+        },
       },
       {
         label: "selects files for blank album; all artists",
@@ -273,7 +273,7 @@ describe("media/Selector", () => {
             title: "Bazlishli",
             track: "1",
             year: "2000",
-            file_type: "FLAC"
+            file_type: "FLAC",
           },
           {
             path: "foo5.flac",
@@ -284,13 +284,13 @@ describe("media/Selector", () => {
             title: "Footl",
             track: "2",
             year: "2000",
-            file_type: "FLAC"
-          }
+            file_type: "FLAC",
+          },
         ],
         settings: {
-          compilationArtists: false
-        }
-      }
+          compilationArtists: false,
+        },
+      },
     ];
 
     tests.forEach(({ label, expected, settings }) => {
@@ -316,8 +316,8 @@ describe("media/Selector", () => {
           title: "Footl",
           track: "2",
           year: "2000",
-          file_type: "FLAC"
-        }
+          file_type: "FLAC",
+        },
       ];
 
       const settings = { compilationArtists: true };
@@ -338,19 +338,19 @@ describe("media/Selector", () => {
 
       expect(sut.last).to.deep.equal({
         category: "artist",
-        value: { artist: "fooartist" }
+        value: { artist: "fooartist" },
       });
 
       sut.set("genre", <CategoryData>{ genre: "genrefoobar" });
 
       expect(sut.last).to.deep.equal({
         category: "genre",
-        value: { genre: "genrefoobar" }
+        value: { genre: "genrefoobar" },
       });
     });
   });
 });
 
 const getSettings = (settings: Record<string, unknown>) => <Settings>(<unknown>{
-    has: (key: string) => !!settings[key]
+    has: (key: string) => !!settings[key],
   });
