@@ -71,7 +71,7 @@ export default class CategoriesComponent extends Vue {
   /**
    * Group files into categories and provide means to view
    *
-   * TODO: Move busines logic out of this component
+   * TODO: Move business logic out of this component
    */
   get categories(): Record<string, Category> {
     return {
