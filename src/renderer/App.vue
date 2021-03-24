@@ -2,17 +2,14 @@
   <div id="app">
     <div id="wrap">
       <file-menu :settings="settings"> </file-menu>
-
-      <categories :player="player" :settings="settings"> </categories>
-
+      <categories :player="player" :settings="settings"></categories>
       <playlist :player="player"> </playlist>
-
       <toolbar :player="player"> </toolbar>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CategoriesComponent from "./components/Categories.vue";
 import FileMenuComponent from "./components/FileMenu.vue";
 import PlaylistComponent from "./components/Playlist.vue";
@@ -20,23 +17,24 @@ import ToolbarComponent from "./components/Toolbar.vue";
 import { Player } from "@/lib/Player";
 import { Playlist } from "@/lib/Playlist";
 import { Settings } from "@/lib/Settings";
+import { Vue, Component } from "vue-property-decorator";
 import { settings_store } from "@/index";
 
-export default {
+@Component({
   components: {
     "file-menu": FileMenuComponent,
     categories: CategoriesComponent,
     playlist: PlaylistComponent,
     toolbar: ToolbarComponent,
   },
+})
+export default class AppComponent extends Vue {
+  /** Audio player */
+  player: Player = new Player(new Playlist([]));
 
-  data() {
-    return {
-      player: new Player(new Playlist([])),
-      settings: new Settings(settings_store),
-    };
-  },
-};
+  /** User Settings */
+  settings: Settings = new Settings(settings_store);
+}
 </script>
 
 <style lang="scss">
