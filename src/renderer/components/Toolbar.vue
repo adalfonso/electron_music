@@ -14,26 +14,27 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import PlaybackControlsComponent from "./Toolbar/PlaybackControls.vue";
 import SeekbarComponent from "./Toolbar/Seekbar.vue";
+import { Player } from "@/lib/Player";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
     "playback-controls": PlaybackControlsComponent,
     seekbar: SeekbarComponent,
   },
+})
+export default class ToolbarComponent extends Vue {
+  /** Audio player */
+  @Prop() player: Player;
 
-  props: {
-    player: { required: true },
-  },
-
-  computed: {
-    nowPlaying() {
-      return this.player.playlist.now_playing;
-    },
-  },
-};
+  /** Get the now playing audio track */
+  get nowPlaying() {
+    return this.player.playlist.now_playing;
+  }
+}
 </script>
 
 <style lang="scss">
