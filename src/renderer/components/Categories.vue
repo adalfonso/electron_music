@@ -30,7 +30,7 @@
 <script lang="ts">
 import CategoryComponent from "./Categories/Category.vue";
 import { CategoryData, SelectionCategory, Selector } from "@/media/Selector";
-import { MediaMetaData } from "@/media/Media";
+import { MediaDocument } from "@/media/Media";
 import { Player } from "@/lib/Player";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
@@ -52,7 +52,7 @@ export default class CategoriesComponent extends Vue {
   @Prop() settings: Settings;
 
   /** All library files */
-  files: MediaMetaData[] = [];
+  files: MediaDocument[] = [];
 
   /** Selects media based on categories like artist or album */
   selector: Selector = new Selector();

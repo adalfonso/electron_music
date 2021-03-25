@@ -5,7 +5,7 @@ import {
 } from "../../../src/renderer/media/Selector";
 import { expect } from "chai";
 import { getFiles } from "./common";
-import { MediaMetaData } from "@/media/Media";
+import { MediaDocument } from "@/media/Media";
 import { Settings } from "@/lib/Settings";
 
 describe("media/Selector", () => {
@@ -35,7 +35,7 @@ describe("media/Selector", () => {
   describe("select", () => {
     interface SelectTest {
       category: SelectionCategory;
-      expected: MediaMetaData[];
+      expected: MediaDocument[];
     }
 
     const tests: SelectTest[] = [
@@ -43,6 +43,7 @@ describe("media/Selector", () => {
         category: "artist",
         expected: [
           {
+            _id: "11",
             path: "foo5.flac",
             artist: "The Foo",
             album: "",
@@ -54,6 +55,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "6",
             path: "foo3.flac",
             artist: "The Foo",
             album: "Foo-ing Around Again",
@@ -65,6 +67,7 @@ describe("media/Selector", () => {
             file_type: "MP3",
           },
           {
+            _id: "0",
             path: "foo.flac",
             artist: "The Foo",
             album: "Foo-ing Around",
@@ -76,6 +79,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "1",
             path: "foo1.flac",
             artist: "The Foo",
             album: "Foo-ing Around",
@@ -87,6 +91,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "8",
             album: "The Compilation",
             artist: "The Foo",
             duration: 131,
@@ -103,6 +108,7 @@ describe("media/Selector", () => {
         category: "genre",
         expected: [
           {
+            _id: "10",
             path: "baz4.flac",
             artist: "Bazzler",
             album: "",
@@ -114,6 +120,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "4",
             path: "baz.flac",
             artist: "Bazzler",
             album: "Baz",
@@ -125,6 +132,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "5",
             path: "baz1.flac",
             artist: "Bazzler",
             album: "Baz",
@@ -136,6 +144,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "7",
             path: "baz2.flac",
             artist: "Bazzler",
             album: "The Compilation",
@@ -147,6 +156,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "9",
             path: "baz3.flac",
             artist: "Bazzler",
             album: "The Compilation",
@@ -175,7 +185,7 @@ describe("media/Selector", () => {
   describe("selectAlbum", () => {
     interface SelectAlbumTest {
       label: string;
-      expected: MediaMetaData[];
+      expected: MediaDocument[];
       settings: Record<string, unknown>;
     }
 
@@ -185,6 +195,7 @@ describe("media/Selector", () => {
 
         expected: [
           {
+            _id: "4",
             path: "baz.flac",
             artist: "Bazzler",
             album: "Baz",
@@ -196,6 +207,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "5",
             path: "baz1.flac",
             artist: "Bazzler",
             album: "Baz",
@@ -214,6 +226,7 @@ describe("media/Selector", () => {
 
         expected: [
           {
+            _id: "7",
             path: "baz2.flac",
             artist: "Bazzler",
             album: "The Compilation",
@@ -225,6 +238,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "8",
             path: "foo4.flac",
             artist: "The Foo",
             album: "The Compilation",
@@ -245,6 +259,7 @@ describe("media/Selector", () => {
 
         expected: [
           {
+            _id: "8",
             path: "foo4.flac",
             artist: "The Foo",
             album: "The Compilation",
@@ -265,6 +280,7 @@ describe("media/Selector", () => {
 
         expected: [
           {
+            _id: "10",
             path: "baz4.flac",
             artist: "Bazzler",
             album: "",
@@ -276,6 +292,7 @@ describe("media/Selector", () => {
             file_type: "FLAC",
           },
           {
+            _id: "11",
             path: "foo5.flac",
             artist: "The Foo",
             album: "",
@@ -308,6 +325,7 @@ describe("media/Selector", () => {
 
       const expected = [
         {
+          _id: "11",
           path: "foo5.flac",
           artist: "The Foo",
           album: "",

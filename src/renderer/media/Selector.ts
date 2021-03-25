@@ -1,4 +1,4 @@
-import { MediaMetaData } from "./Media";
+import { MediaDocument } from "./Media";
 import { Settings } from "@/lib/Settings";
 
 /** Allowed selection types */
@@ -66,7 +66,7 @@ export class Selector {
   public select(
     category: SelectionCategory,
     data: CategoryData,
-    files: MediaMetaData[],
+    files: MediaDocument[],
     settings: Settings
   ) {
     this.set(category, data);
@@ -86,7 +86,7 @@ export class Selector {
    *
    * @return filtered files
    */
-  private _selectArtist(data: CategoryData, files: MediaMetaData[]) {
+  private _selectArtist(data: CategoryData, files: MediaDocument[]) {
     return files
       .filter(file => file.artist === data.artist)
       .sort((a, b) =>
@@ -104,7 +104,7 @@ export class Selector {
    *
    * @return filtered files
    */
-  private _selectGenre(data: CategoryData, files: MediaMetaData[]) {
+  private _selectGenre(data: CategoryData, files: MediaDocument[]) {
     const genreFormat = song =>
       song.artist.padEnd(40, "") +
       song.album.padEnd(20, "") +
@@ -126,7 +126,7 @@ export class Selector {
    */
   private _selectAlbum(
     data: CategoryData,
-    files: MediaMetaData[],
+    files: MediaDocument[],
     settings: Settings
   ) {
     const compilations_enabled = settings.has("compilationArtists");

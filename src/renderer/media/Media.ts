@@ -11,6 +11,10 @@ export interface MediaMetaData {
   file_type: string;
 }
 
+export interface MediaDocument extends MediaMetaData {
+  _id: string;
+}
+
 /** Summary of media type */
 export interface MediaTypeAggregateData {
   file_type: string;

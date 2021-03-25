@@ -22,12 +22,11 @@
           <th>Track</th>
         </tr>
 
-        <!-- TODO: use a unique ID for key -->
         <tr
           v-for="(file, index) in files"
           :class="indexClass(index)"
           @click="player.changeIndex(index)"
-          :key="file.artist + file.title + index"
+          :key="file._id"
         >
           <td>{{ file.artist }}</td>
           <td>{{ file.album }}</td>

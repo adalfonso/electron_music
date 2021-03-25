@@ -1,3 +1,4 @@
+import { MediaDocument } from "@/media/Media";
 import { Playlist } from "./Playlist";
 
 /**
@@ -129,10 +130,11 @@ export class Player {
    * @param force_play - if audio should play automatically
    *
    * @return this
-   *
-   * TODO: fix any type
    */
-  public changePlaylist(list: any[], force_play: boolean = false): this {
+  public changePlaylist(
+    list: MediaDocument[],
+    force_play: boolean = false
+  ): this {
     /**
      * If we want to play this playlist immediately, then we will set it as the
      * main playlist. Otherwise we just want to browse it.

@@ -1,7 +1,8 @@
-import { MediaMetaData } from "@/media/Media";
+import { MediaDocument } from "@/media/Media";
 
-export const getFiles = (): MediaMetaData[] => [
+export const getFiles = (): MediaDocument[] => [
   {
+    _id: "0",
     path: "foo.flac",
     artist: "The Foo",
     album: "Foo-ing Around",
@@ -13,6 +14,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "1",
     path: "foo1.flac",
     artist: "The Foo",
     album: "Foo-ing Around",
@@ -24,6 +26,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "2",
     path: "bar.flac",
     artist: "The Bar",
     album: "Bar-ing Around",
@@ -35,6 +38,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "MP3",
   },
   {
+    _id: "3",
     path: "boz.flac",
     artist: "Bozzy",
     album: "Booze",
@@ -46,6 +50,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "M4A",
   },
   {
+    _id: "4",
     path: "baz.flac",
     artist: "Bazzler",
     album: "Baz",
@@ -57,6 +62,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "5",
     path: "baz1.flac",
     artist: "Bazzler",
     album: "Baz",
@@ -68,6 +74,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "6",
     path: "foo3.flac",
     artist: "The Foo",
     album: "Foo-ing Around Again",
@@ -79,6 +86,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "MP3",
   },
   {
+    _id: "7",
     path: "baz2.flac",
     artist: "Bazzler",
     album: "The Compilation",
@@ -90,6 +98,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "8",
     path: "foo4.flac",
     artist: "The Foo",
     album: "The Compilation",
@@ -101,6 +110,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "9",
     path: "baz3.flac",
     artist: "Bazzler",
     album: "The Compilation",
@@ -112,6 +122,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "10",
     path: "baz4.flac",
     artist: "Bazzler",
     album: "",
@@ -123,6 +134,7 @@ export const getFiles = (): MediaMetaData[] => [
     file_type: "FLAC",
   },
   {
+    _id: "11",
     path: "foo5.flac",
     artist: "The Foo",
     album: "",

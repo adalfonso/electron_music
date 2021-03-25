@@ -1,3 +1,5 @@
+import { MediaDocument } from "@/media/Media";
+
 /**
  * Different states a playlist can have
  *
@@ -12,15 +14,6 @@ export enum PlaylistState {
 }
 
 /**
- * Temp typring for playlist items
- *
- * TODO: make a proper type for this
- */
-interface PlaylistItem {
-  path: string;
-}
-
-/**
  * Keeps track of audio tracks that are being played and browsed
  */
 export class Playlist {
@@ -31,14 +24,14 @@ export class Playlist {
   private _index: number = 0;
 
   /** List of audio tracks being browsed */
-  private _browsing_list: PlaylistItem[] = [];
+  private _browsing_list: MediaDocument[] = [];
 
   /**
    * Create a new Playlist
    *
    * @param _main_list - list of audio tracks in the play queue
    */
-  constructor(private _main_list: PlaylistItem[] = []) {}
+  constructor(private _main_list: MediaDocument[] = []) {}
 
   public get index() {
     return this._index;
@@ -53,7 +46,7 @@ export class Playlist {
   }
 
   /** Get source attributes of the currently playing track */
-  public get now_playing(): PlaylistItem {
+  public get now_playing(): MediaDocument {
     return this._main_list[this._index];
   }
 
@@ -90,7 +83,7 @@ export class Playlist {
    *
    * @param list - new main playlist
    */
-  public setMainList(list: PlaylistItem[]) {
+  public setMainList(list: MediaDocument[]) {
     this._state = PlaylistState.Main;
     this._main_list = list;
     this._index = 0;
@@ -104,7 +97,7 @@ export class Playlist {
    * @param list - new browsing playlist
    *
    * */
-  public setBrowsingList(list: PlaylistItem[]) {
+  public setBrowsingList(list: MediaDocument[]) {
     this._state = PlaylistState.Browsing;
     this._browsing_list = list;
   }
@@ -130,7 +123,7 @@ export class Playlist {
   }
 
   /** Get the current visible playlist contents */
-  public getVisibleList(): PlaylistItem[] {
+  public getVisibleList(): MediaDocument[] {
     return this._state === PlaylistState.Main
       ? this._main_list
       : this._browsing_list;
