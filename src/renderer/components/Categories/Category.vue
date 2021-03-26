@@ -5,7 +5,6 @@
       <div v-if="category.hasDefault" class="item" @click="reset">
         [All {{ category.title }} - {{ category.list.length }}]
       </div>
-      <!-- TODO: use a better :key -->
       <div
         v-for="item in category.list"
         :class="isSelected(item) ? 'item selected' : 'item'"

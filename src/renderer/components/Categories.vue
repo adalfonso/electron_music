@@ -68,11 +68,7 @@ export default class CategoriesComponent extends Vue {
     }, 5000);
   }
 
-  /**
-   * Group files into categories and provide means to view
-   *
-   * TODO: Move business logic out of this component
-   */
+  /** Group files into categories and provide means to view */
   get categories(): Record<string, Category> {
     return {
       artist: {

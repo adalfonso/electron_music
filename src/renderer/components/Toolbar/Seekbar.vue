@@ -21,29 +21,25 @@
 
 <script lang="ts">
 import { Player } from "@/lib/Player";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component
 export default class SeekbarComponent extends Vue {
   @Prop() player: Player;
-
-  /** If the seekbar is currently seeking */
-  is_seeking: boolean = false;
-
-  /** x-position of the seekbar */
-  seekbar_drag_x: number = 0;
 
   /**
    * Get the phantom seekbar
    *
    * This is as an invisible overlay used to increase the clickable area
    * of the seekbar
-   *
-   * TODO: if there is a better way to make TS aware of the type, prefer that.
    */
-  get phantom_seekbar(): HTMLElement {
-    return this.$refs.phantomSeekbar as HTMLElement;
-  }
+  @Ref("phantomSeekbar") readonly phantom_seekbar!: HTMLDivElement;
+
+  /** If the seekbar is currently seeking */
+  is_seeking: boolean = false;
+
+  /** x-position of the seekbar */
+  seekbar_drag_x: number = 0;
 
   /** Current time to display on the seekbar */
   get current_time(): string {

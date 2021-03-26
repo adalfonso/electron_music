@@ -41,11 +41,19 @@
 
 <script lang="ts">
 import { Player } from "@/lib/Player";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component
 export default class PlaybackControlsComponent extends Vue {
   @Prop() player: Player;
+
+  /**
+   * Get the phantom volume bar
+   *
+   * This is as an invisible overlay used to increase the clickable area
+   * of the volume bar
+   */
+  @Ref("phantomVolumeBar") readonly phantom_volume_bar!: HTMLDivElement;
 
   /** If the volume is currently being adjusted */
   is_adjusting_volume: boolean = false;
@@ -60,18 +68,6 @@ export default class PlaybackControlsComponent extends Vue {
       : this.player.volume;
 
     return `width: ${volume * 100}%`;
-  }
-
-  /**
-   * Get the phantom volume bar
-   *
-   * This is as an invisible overlay used to increase the clickable area
-   * of the volume bar
-   *
-   * TODO: if there is a better way to make TS aware of the type, prefer that.
-   */
-  get phantom_volume_bar(): HTMLElement {
-    return this.$refs.phantomVolumeBar as HTMLElement;
   }
 
   /** Handle mouse move events  */
