@@ -2,8 +2,10 @@
   <div class="overlay center" @click="hide">
     <section id="file-browser" @click.stop>
       <h3>Browse for files</h3>
-
-      <input type="file" webkitdirectory @change="crawl" />
+      <div class="file-input">
+        <div>Click to add media files</div>
+        <input type="file" webkitdirectory @change="crawl" />
+      </div>
 
       <template v-if="crawler.is_busy">
         <div class="crawl-progress-bar">
@@ -28,7 +30,7 @@
 
       <template v-if="crawler_results">
         <p>
-          Processed <b>{{ crawler_results.total_files_count }}</b> in
+          Processed <b>{{ crawler_results.total_files_count }}</b> files in
           <b>{{
             (crawler_results.ended_at - crawler_results.started_at) / 1000
           }}</b>
@@ -87,6 +89,29 @@ export default class FileBrowserComponent extends Vue {
   h3 {
     text-transform: uppercase;
     text-align: center;
+  }
+
+  .file-input {
+    display: flex;
+    position: relative;
+
+    > div {
+      width: 100%;
+      height: 5rem;
+      border: 4px dashed $med-blue;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input {
+      position: absolute;
+      border: 1px solid red;
+      bottom: 0;
+      top: 0;
+      width: 100%;
+      opacity: 0;
+    }
   }
 
   .crawl-progress-bar {
