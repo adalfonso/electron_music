@@ -18,7 +18,7 @@ import { Player } from "@/lib/Player";
 import { Playlist } from "@/lib/Playlist";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component } from "vue-property-decorator";
-import { settings_store } from "@/index";
+import { logger, settings_store } from "@/index";
 
 @Component({
   components: {
@@ -34,6 +34,10 @@ export default class AppComponent extends Vue {
 
   /** User Settings */
   settings: Settings = new Settings(settings_store);
+
+  mounted() {
+    logger.info("Application mounted");
+  }
 }
 </script>
 

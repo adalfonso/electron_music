@@ -35,6 +35,7 @@ import { Player } from "@/lib/Player";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
+import { logger } from "../index";
 import { mediaTransformations } from "@/media/Transform";
 
 export interface Category {
@@ -57,15 +58,14 @@ export default class CategoriesComponent extends Vue {
   /** Selects media based on categories like artist or album */
   selector: Selector = new Selector();
 
-  mounted() {
-    /** Hack for now for the next little while */
-    setInterval(async () => {
-      try {
-        this.files = await library_store.find({});
-      } catch (error) {
-        console.log("Failed to load media files.", error);
-      }
-    }, 5000);
+  async mounted() {
+    try {
+      logger.info("Loading media files");
+      this.files = await library_store.find({});
+      logger.info("Media files loaded");
+    } catch (error) {
+      logger.error("Failed to load media files", { error });
+    }
   }
 
   /** Group files into categories and provide means to view */
