@@ -6,6 +6,15 @@
       <input type="file" webkitdirectory @change="crawl" />
 
       <template v-if="crawler.is_busy">
+        <div class="crawl-progress-bar">
+          <div
+            :style="
+              `width:${(crawler.stats.processed_count /
+                crawler.stats.total_files_count) *
+                100}%`
+            "
+          ></div>
+        </div>
         <p v-if="crawler.stats">
           <b>{{ crawler.stats.processed_count }}</b> out of
           <b>{{ crawler.stats.total_files_count }}</b>
@@ -31,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Crawler, CrawlResult, CrawlStats } from "@/lib/Crawler";
+import { Crawler, CrawlStats } from "@/lib/Crawler";
 import { Vue, Component } from "vue-property-decorator";
 import { library_store } from "@/index";
 
@@ -40,7 +49,7 @@ export default class FileBrowserComponent extends Vue {
   /** Traverses local files and stores metadata in data store */
   crawler: Crawler = new Crawler(library_store);
 
-  /** Stats from the last ran crawl */
+  /** Stats from the last crawl */
   crawler_results: CrawlStats = null;
 
   /** Emit a hide event to the parent */
@@ -78,6 +87,19 @@ export default class FileBrowserComponent extends Vue {
   h3 {
     text-transform: uppercase;
     text-align: center;
+  }
+
+  .crawl-progress-bar {
+    margin-top: 1rem;
+    width: 100%;
+    border: 1px solid $med-blue;
+    height: 0.5rem;
+    border-radius: 0.125rem;
+
+    > div {
+      background-color: $med-blue;
+      height: 100%;
+    }
   }
 }
 </style>
