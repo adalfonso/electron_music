@@ -1,7 +1,7 @@
 import fs from "fs";
 import mm from "musicmetadata";
 import { Datastore } from "@/data/Datastore";
-import { MediaMetaData } from "@/media/Media";
+import { MediaDocument, MediaMetaData } from "@/media/Media";
 
 interface MetaDataResult {
   path: string;
@@ -12,12 +12,31 @@ interface FileHandle {
   path: string;
 }
 
+export interface CrawlStats {
+  started_at: Date;
+  ended_at: Date;
+  processed_count: number;
+  total_files_count: number;
+}
+
+export interface CrawlResult {
+  inserted_docs: MediaDocument[];
+  stats: CrawlStats;
+}
+
 /**
  * Reads a directory on disk, extracts meta data and stores
  */
 export class Crawler {
   /** If the crawler is currently running */
   private _is_busy: boolean = false;
+
+  private _crawl_stats: CrawlStats = {
+    started_at: null,
+    ended_at: null,
+    processed_count: 0,
+    total_files_count: 0,
+  };
 
   /** Current file being processed */
   private _current_file: string = null;
@@ -51,6 +70,10 @@ export class Crawler {
     return this._current_file;
   }
 
+  public get stats() {
+    return this._crawl_stats;
+  }
+
   /**
    * Perform the crawl
    *
@@ -58,7 +81,7 @@ export class Crawler {
    *
    * @return promise to indicate when operation completes
    */
-  public async crawl(files: FileHandle[]): Promise<void> {
+  public async crawl(files: FileHandle[]): Promise<CrawlResult> {
     try {
       // let's clear existing files when this runs
       await this._db.remove({}, { multi: true });
@@ -67,12 +90,13 @@ export class Crawler {
     }
 
     this._is_busy = true;
+    this._crawl_stats.started_at = new Date();
     this._queue = files.map(file => file.path);
+    this._crawl_stats.total_files_count = this._queue.length;
 
     return new Promise((resolve, reject) => {
       this._done_processing = resolve;
       this._error_processing = reject;
-
       this._process();
     });
   }
@@ -106,6 +130,7 @@ export class Crawler {
 
       readableStream.close();
       this._results.push({ path, meta });
+      this._crawl_stats.processed_count++;
       this._process();
     });
   }
@@ -120,7 +145,9 @@ export class Crawler {
 
     this._is_busy = false;
 
-    this._done_processing(inserted_docs);
+    this._crawl_stats.ended_at = new Date();
+
+    this._done_processing({ inserted_docs, stats: this._crawl_stats });
 
     this._cleanUp();
   }
@@ -150,5 +177,12 @@ export class Crawler {
   private _cleanUp() {
     this._done_processing = null;
     this._error_processing = null;
+
+    this._crawl_stats = {
+      started_at: null,
+      ended_at: null,
+      processed_count: 0,
+      total_files_count: 0,
+    };
   }
 }
