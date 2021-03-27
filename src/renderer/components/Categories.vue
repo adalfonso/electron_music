@@ -35,7 +35,6 @@ import { Player } from "@/lib/Player";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { library_store } from "@/index";
-import { logger } from "../index";
 import { mediaTransformations } from "@/media/Transform";
 
 export interface Category {
@@ -60,12 +59,8 @@ export default class CategoriesComponent extends Vue {
 
   async mounted() {
     try {
-      logger.info("Loading media files");
       this.files = await library_store.find({});
-      logger.info("Media files loaded");
-    } catch (error) {
-      logger.error("Failed to load media files", { error });
-    }
+    } catch (error) {}
   }
 
   /** Group files into categories and provide means to view */

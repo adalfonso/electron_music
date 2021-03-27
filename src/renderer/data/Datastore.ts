@@ -28,7 +28,7 @@ export interface Datastore<T> {
   update(
     query: unknown,
     update: unknown,
-    options?: UpdateOptions
+    options: UpdateOptions
   ): Promise<UpdateResult>;
 
   /** Remove documents from the store */

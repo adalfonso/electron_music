@@ -58,9 +58,7 @@ export class Crawler {
    *
    * @param _db - data store for file meta data
    */
-  constructor(private _db: Datastore<MediaMetaData>) {
-    this._db.remove({}, { multi: true });
-  }
+  constructor(private _db: Datastore<MediaMetaData>) {}
 
   public get is_busy(): boolean {
     return this._is_busy;

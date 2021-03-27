@@ -42,9 +42,6 @@ export class Settings {
   /**
    * Toggle a setting on or off
    *
-   * TODO: Consider the operations here. Toggling a setting will potentially
-   * cause two reads and a write.
-   *
    * @param setting_name - name of the setting to toggle
    */
   public async toggle(setting_name: string) {
@@ -52,9 +49,7 @@ export class Settings {
       const docs = await this._db.find({ name: setting_name });
 
       if (docs.length) {
-        await this._db.update(docs[0], { $set: { value: !docs[0].value } });
-
-        this._refresh();
+        await this._db.update(docs[0], { $set: { value: !docs[0].value } }, {});
       } else {
         await this._db.insert([{ name: setting_name, value: true }]);
       }
