@@ -22,12 +22,26 @@ export class Crawler {
   /** Current file being processed */
   private _current_file: string = null;
 
+  /** List of all files to process */
+  private _queue: string[] = [];
+
+  /** Accumulated meta data */
+  private _results: any[] = [];
+
+  /** Crawl promise resolve handler */
+  private _done_processing: Function = null;
+
+  /** Crawl promise reject handler */
+  private _error_processing: Function = null;
+
   /**
    * Create a new crawler
    *
    * @param _db - data store for file meta data
    */
-  constructor(private _db: Datastore<MediaMetaData>) {}
+  constructor(private _db: Datastore<MediaMetaData>) {
+    this._db.remove({}, { multi: true });
+  }
 
   public get is_busy(): boolean {
     return this._is_busy;
@@ -53,34 +67,46 @@ export class Crawler {
     }
 
     this._is_busy = true;
+    this._queue = files.map(file => file.path);
 
-    /**
-     * TODO: rework this
-     *
-     * This method is not performant - it loads up a bunch of read streams which
-     * blows out the system for folders with many files. Find a way to batch
-     * this operation.
-     */
-    const processing = files
-      .map(file => file.path)
-      .map(path =>
-        new Promise((resolve, reject) => {
-          const readableStream = fs.createReadStream(path);
-          this._current_file = path;
+    return new Promise((resolve, reject) => {
+      this._done_processing = resolve;
+      this._error_processing = reject;
 
-          mm(readableStream, (error, meta) => {
-            if (error) {
-              reject(error);
-            }
-            readableStream.close();
-            resolve({ path, meta });
-          });
-        }).catch(console.log)
-      );
+      this._process();
+    });
+  }
 
-    // TODO: This assumes there are no errors
-    return Promise.all(processing).then((result: MetaDataResult[]) => {
-      this.insert(this.processFiles(result));
+  /**
+   * Process the next item in the queue or insert the results
+   */
+  private _process() {
+    if (this._queue.length > 0) {
+      this._processPath(this._queue.pop());
+    } else {
+      this._insert(this._processFiles(this._results));
+    }
+  }
+
+  /**
+   * Process an individial file path
+   *
+   * @param path - file path
+   */
+  private _processPath(path: string) {
+    const readableStream = fs.createReadStream(path);
+    this._current_file = path;
+
+    mm(readableStream, (error, meta) => {
+      if (error) {
+        this._error_processing(error);
+        this._cleanUp();
+        return;
+      }
+
+      readableStream.close();
+      this._results.push({ path, meta });
+      this._process();
     });
   }
 
@@ -89,12 +115,14 @@ export class Crawler {
    *
    * @param files - file meta data
    */
-  async insert(docs: MediaMetaData[]) {
+  private async _insert(docs: MediaMetaData[]) {
     const inserted_docs = await this._db.insert(docs);
 
     this._is_busy = false;
 
-    return inserted_docs;
+    this._done_processing(inserted_docs);
+
+    this._cleanUp();
   }
 
   /**
@@ -104,19 +132,23 @@ export class Crawler {
    *
    * @return converted meta data
    */
-  processFiles(files: MetaDataResult[]): MediaMetaData[] {
-    return files.map(file => {
-      return {
-        path: file.path.replace(/\\/g, "/"),
-        artist: file.meta.artist[0],
-        album: file.meta.album,
-        duration: file.meta.duration,
-        genre: file.meta.genre[0],
-        title: file.meta.title,
-        track: file.meta.track.no.toString(),
-        year: file.meta.year,
-        file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase(),
-      };
-    });
+  private _processFiles(files: MetaDataResult[]): MediaMetaData[] {
+    return files.map(file => ({
+      path: file.path.replace(/\\/g, "/"),
+      artist: file.meta.artist[0],
+      album: file.meta.album,
+      duration: file.meta.duration,
+      genre: file.meta.genre[0],
+      title: file.meta.title,
+      track: file.meta.track.no.toString(),
+      year: file.meta.year,
+      file_type: file.path.match(/.([\w\d]+)$/)[1].toUpperCase(),
+    }));
+  }
+
+  /** Clean up temporary data from a crawl operation */
+  private _cleanUp() {
+    this._done_processing = null;
+    this._error_processing = null;
   }
 }
