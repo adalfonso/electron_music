@@ -1,7 +1,7 @@
 import fs from "fs";
 import mm from "musicmetadata";
-import { Datastore } from "@/data/Datastore";
 import { MediaDocument, MediaMetaData } from "@/media/Media";
+import { MediaMediator } from "@/MediaMediator";
 
 interface MetaDataResult {
   path: string;
@@ -56,9 +56,9 @@ export class Crawler {
   /**
    * Create a new crawler
    *
-   * @param _db - data store for file meta data
+   * @param _media_mediator - mediates local media and media store
    */
-  constructor(private _db: Datastore<MediaMetaData>) {}
+  constructor(private _media_mediator: MediaMediator) {}
 
   public get is_busy(): boolean {
     return this._is_busy;
@@ -80,13 +80,6 @@ export class Crawler {
    * @return promise to indicate when operation completes
    */
   public async crawl(files: FileHandle[]): Promise<CrawlResult> {
-    try {
-      // let's clear existing files when this runs
-      await this._db.remove({}, { multi: true });
-    } catch (error) {
-      console.log("An error occurred while crawling.", error);
-    }
-
     this._is_busy = true;
     this._crawl_stats.started_at = new Date();
     this._queue = files.map(file => file.path);
@@ -139,7 +132,7 @@ export class Crawler {
    * @param files - file meta data
    */
   private async _insert(docs: MediaMetaData[]) {
-    const inserted_docs = await this._db.insert(docs);
+    const inserted_docs = await this._media_mediator.add(docs);
 
     this._is_busy = false;
 
@@ -182,5 +175,7 @@ export class Crawler {
       processed_count: 0,
       total_files_count: 0,
     };
+
+    this._results = [];
   }
 }

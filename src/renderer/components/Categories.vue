@@ -34,8 +34,8 @@ import { MediaDocument } from "@/media/Media";
 import { Player } from "@/lib/Player";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { library_store } from "@/index";
 import { mediaTransformations } from "@/media/Transform";
+import { media_mediator } from "@/index";
 
 export interface Category {
   list: CategoryData[];
@@ -51,16 +51,18 @@ export default class CategoriesComponent extends Vue {
   /** User settings */
   @Prop() settings: Settings;
 
-  /** All library files */
+  /** Media files */
   files: MediaDocument[] = [];
 
   /** Selects media based on categories like artist or album */
   selector: Selector = new Selector();
 
-  async mounted() {
-    try {
-      this.files = await library_store.find({});
-    } catch (error) {}
+  /** Facilitate media loading */
+  mounted() {
+    const loader = this.loadFiles.bind(this);
+
+    media_mediator.get().then(loader);
+    media_mediator.listen(loader);
   }
 
   /** Group files into categories and provide means to view */
@@ -89,6 +91,15 @@ export default class CategoriesComponent extends Vue {
   /** Used ot transform media files into selection category data */
   get transformer() {
     return mediaTransformations(this.files);
+  }
+
+  /**
+   * Load media files into the component
+   *
+   * @param files - files to load
+   */
+  loadFiles(files: MediaDocument[]) {
+    this.files = files;
   }
 
   /**

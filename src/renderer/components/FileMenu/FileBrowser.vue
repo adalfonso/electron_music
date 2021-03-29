@@ -45,12 +45,12 @@
 <script lang="ts">
 import { Crawler, CrawlStats } from "@/lib/Crawler";
 import { Vue, Component } from "vue-property-decorator";
-import { library_store } from "@/index";
+import { media_mediator } from "@/index";
 
 @Component
 export default class FileBrowserComponent extends Vue {
   /** Traverses local files and stores metadata in data store */
-  crawler: Crawler = new Crawler(library_store);
+  crawler: Crawler = new Crawler(media_mediator);
 
   /** Stats from the last crawl */
   crawler_results: CrawlStats = null;
