@@ -61,6 +61,25 @@ table {
   }
 }
 
+.close-pane {
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  line-height: 1rem;
+  font-weight: bold;
+  text-align: eight;
+  position: absolute;
+  transition: 0.2s;
+
+  &::before {
+    content: "×";
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
 .ui-button-set {
   display: inline-flex;
 

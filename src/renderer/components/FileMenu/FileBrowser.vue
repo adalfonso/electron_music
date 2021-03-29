@@ -1,6 +1,7 @@
 <template>
   <div class="overlay center" @click="hide">
     <section id="file-browser" @click.stop>
+      <div class="close-pane" @click.stop="hide"></div>
       <h3>Browse for files</h3>
       <div class="file-input">
         <div>Click to add media files</div>
@@ -83,6 +84,7 @@ export default class FileBrowserComponent extends Vue {
   border-radius: 0.2rem;
   color: $dark-blue;
   padding: 1rem;
+  position: relative;
   width: 500px;
   height: 500px;
 
