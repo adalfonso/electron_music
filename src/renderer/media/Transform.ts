@@ -12,7 +12,9 @@ import { CategoryData, SelectionCategory } from "./Selector";
 export const getUnique = (files: MediaMetaData[]) => (
   key: string
 ): string[] => {
-  return [...new Set(files.map(file => file[key]))].sort();
+  return [...new Set(files.map(file => file[key]))].sort((a, b) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
 };
 
 /**
