@@ -23,7 +23,7 @@ describe("media/Transform", () => {
     // TODO: What if there are multiple years?
     it("gets unique albums for all artists", () => {
       const expected = [
-        { artist: "Bazzler", album: "", year: "2000" },
+        { artist: "Various Artists", album: "", year: "" },
         { artist: "The Bar", album: "Bar-ing Around", year: "2005" },
         { artist: "Bazzler", album: "Baz", year: "2019" },
         { artist: "Bozzy", album: "Booze", year: "2021" },
@@ -49,6 +49,49 @@ describe("media/Transform", () => {
       const sut = Sut.getUniqueAlbums(getFiles());
 
       expect(sut("The Foo")).to.deep.equal(expected);
+    });
+
+    it("aggregates [Unknown Album]", () => {
+      const expected = [
+        { artist: "Various Artists", album: "", year: "" },
+        { artist: "The Bar", album: "Bar-ing Around", year: "2005" },
+        { artist: "Bazzler", album: "Baz", year: "2019" },
+        { artist: "Bozzy", album: "Booze", year: "2021" },
+        { album: "Foo-ing Around", artist: "The Foo", year: "1999" },
+        { album: "Foo-ing Around Again", artist: "The Foo", year: "2001" },
+        { artist: "Bazzler", album: "The Compilation", year: "2011" },
+        { artist: "Bazzler", album: "The Compilation", year: "2001" },
+      ];
+
+      const sut = Sut.getUniqueAlbums([
+        ...getFiles(),
+        {
+          _id: "12",
+          path: "foo71.flac",
+          artist: "The Foo",
+          album: "",
+          duration: 124,
+          genre: "Foo Rock",
+          title: "Foo You Too Again unknown",
+          track: "2",
+          year: "1999",
+          file_type: "FLAC",
+        },
+        {
+          _id: "13",
+          path: "bar77.flac",
+          artist: "The Bar",
+          album: "",
+          duration: 125,
+          genre: "Foo Rock",
+          title: "Barbie Girl unknown",
+          track: "1",
+          year: "2005",
+          file_type: "MP3",
+        },
+      ]);
+
+      expect(sut()).to.deep.equal(expected);
     });
   });
 
@@ -88,7 +131,7 @@ describe("media/Transform", () => {
       {
         category: "albums",
         expected: [
-          { artist: "Bazzler", album: "", year: "2000" },
+          { artist: "Various Artists", album: "", year: "" },
           { artist: "The Bar", album: "Bar-ing Around", year: "2005" },
           { artist: "Bazzler", album: "Baz", year: "2019" },
           { artist: "Bozzy", album: "Booze", year: "2021" },

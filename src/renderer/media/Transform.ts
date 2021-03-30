@@ -1,6 +1,13 @@
 import { MediaMetaData, MediaTypeAggregateData } from "./Media";
 import { CategoryData, SelectionCategory } from "./Selector";
 
+export const unknown: Record<SelectionCategory, string> = {
+  artist: "Unknown Artist",
+  album: "[Unknown Album]",
+  genre: "Unknown Genre",
+};
+export const various_artists = "Various Artists";
+
 /**
  * Get a unique list of values based on a shared key
  *
@@ -20,22 +27,26 @@ export const getUnique = (files: MediaMetaData[]) => (
 /**
  * Get unique album data for a list of files
  *
- * @param files  - list of files to consider
- * @param artist - relevant artists or none
+ * @param files        - list of files to consider
+ * @param album_artist - relevant artists or none
  *
  * @return unique album data
  */
 export const getUniqueAlbums = (files: MediaMetaData[]) => (
-  artist: string = null
+  album_artist?: string
 ): CategoryData[] => {
-  files = artist ? files.filter(song => song.artist === artist) : files;
+  files = album_artist
+    ? files.filter(song => song.artist === album_artist)
+    : files;
 
   return files
     .reduce(
       (carry, file) => {
-        const { album, artist, year } = file;
+        let { album, artist, year } = file;
+        artist = album === "" && !album_artist ? various_artists : artist;
+        year = album === "" && !album_artist ? "" : year;
 
-        const key = `${album} - ${year}`;
+        const key = album === "" ? unknown.album : `${album} - ${year}`;
 
         if (carry.names[key] === undefined) {
           carry.names[key] = true;

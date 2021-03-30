@@ -34,7 +34,7 @@ import { MediaDocument } from "@/media/Media";
 import { Player } from "@/lib/Player";
 import { Settings } from "@/lib/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { mediaTransformations } from "@/media/Transform";
+import { mediaTransformations, unknown } from "@/media/Transform";
 import { media_mediator } from "@/index";
 
 export interface Category {
@@ -71,19 +71,19 @@ export default class CategoriesComponent extends Vue {
       artist: {
         list: this.transformer.artists(),
         hasDefault: true,
-        display: data => data.artist || "Unknown Artist",
+        display: data => data.artist || unknown.artist,
       },
       album: {
         list: this.transformer.albums(
           this.selector.get("artist")?.artist ?? null
         ),
         hasDefault: true,
-        display: data => data.album || "[Unknown Album]",
+        display: data => data.album || unknown.album,
       },
       genre: {
         list: this.transformer.genres(),
         hasDefault: false,
-        display: data => data.genre || "Unknown Genre",
+        display: data => data.genre || unknown.genre,
       },
     };
   }
