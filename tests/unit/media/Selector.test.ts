@@ -180,6 +180,26 @@ describe("media/Selector", () => {
         ).to.deep.equal(expected);
       });
     });
+
+    it(`deselects a category`, () => {
+      const sut = new Sut();
+      const primary_selection = sut.select(
+        "artist",
+        {
+          artist: "Bazzler",
+          album: "",
+          genre: "Baz Baz",
+          year: "2000",
+        },
+        getFiles(),
+        getSettings({})
+      );
+
+      expect(primary_selection.length).to.be.gt(0);
+      expect(
+        sut.select("artist", undefined, getFiles(), getSettings({}))
+      ).to.deep.equal([]);
+    });
   });
 
   describe("selectAlbum", () => {

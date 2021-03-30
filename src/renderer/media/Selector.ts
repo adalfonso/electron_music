@@ -30,8 +30,13 @@ export class Selector {
    * @param value    - value to set
    * */
   public set(category: SelectionCategory, value: CategoryData) {
-    this._selection[category] = value;
-    this._last_selected = category;
+    if (value) {
+      this._selection[category] = value;
+      this._last_selected = category;
+    } else {
+      this._selection[category] = null;
+      this._last_selected = null;
+    }
   }
 
   /**
@@ -71,11 +76,13 @@ export class Selector {
   ) {
     this.set(category, data);
 
-    return {
+    const selection = {
       artist: () => this._selectArtist(data, files),
       genre: () => this._selectGenre(data, files),
       album: () => this._selectAlbum(data, files, settings),
-    }[this._last_selected]();
+    };
+
+    return this._last_selected ? selection[this._last_selected]() : [];
   }
 
   /**

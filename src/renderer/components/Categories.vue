@@ -7,7 +7,7 @@
       :category="cat"
       :selector="selector"
       @select="selectCategory"
-      @reset="selected[type] = null"
+      @reset="selectCategory(type, undefined)"
     >
     </category>
 
@@ -71,7 +71,7 @@ export default class CategoriesComponent extends Vue {
       artist: {
         list: this.transformer.artists(),
         hasDefault: true,
-        display: data => data.artist || unknown.artist,
+        display: data => data?.artist || unknown.artist,
       },
       album: {
         list: this.transformer.albums(
@@ -83,7 +83,7 @@ export default class CategoriesComponent extends Vue {
       genre: {
         list: this.transformer.genres(),
         hasDefault: false,
-        display: data => data.genre || unknown.genre,
+        display: data => data?.genre || unknown.genre,
       },
     };
   }
