@@ -31,8 +31,8 @@
 import CategoryComponent from "./Categories/Category.vue";
 import { CategoryData, SelectionCategory, Selector } from "@/media/Selector";
 import { MediaDocument } from "@/media/Media";
-import { Player } from "@/lib/Player";
-import { Settings } from "@/lib/Settings";
+import { Player } from "@/Player";
+import { Settings } from "@/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { mediaTransformations, unknown } from "@/media/Transform";
 import { media_mediator } from "@/index";

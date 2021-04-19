@@ -1,5 +1,5 @@
 import { MediaDocument } from "./Media";
-import { Settings } from "@/lib/Settings";
+import { Settings } from "@/Settings";
 
 /** Allowed selection types */
 export type SelectionCategory = "artist" | "genre" | "album";

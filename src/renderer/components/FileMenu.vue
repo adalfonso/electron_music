@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import FileBrowserComponent from "./FileMenu/FileBrowser.vue";
-import { Settings } from "@/lib/Settings";
+import { Settings } from "@/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({

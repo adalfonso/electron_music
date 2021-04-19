@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { Crawler, CrawlStats } from "@/lib/Crawler";
+import { Crawler, CrawlStats } from "@/Crawler";
 import { Vue, Component } from "vue-property-decorator";
 import { media_mediator } from "@/index";
 

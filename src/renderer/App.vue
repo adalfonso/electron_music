@@ -14,9 +14,9 @@ import CategoriesComponent from "./components/Categories.vue";
 import FileMenuComponent from "./components/FileMenu.vue";
 import PlaylistComponent from "./components/Playlist.vue";
 import ToolbarComponent from "./components/Toolbar.vue";
-import { Player } from "@/lib/Player";
-import { Playlist } from "@/lib/Playlist";
-import { Settings } from "@/lib/Settings";
+import { Player } from "@/Player";
+import { Playlist } from "@/Playlist";
+import { Settings } from "@/Settings";
 import { Vue, Component } from "vue-property-decorator";
 import { logger, settings_store } from "@/index";
 

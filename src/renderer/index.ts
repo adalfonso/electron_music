@@ -4,7 +4,7 @@ import Vue from "vue";
 import { Logger } from "./Logger";
 import { MediaDocument } from "./media/Media";
 import { MediaMediator } from "./MediaMediator";
-import { SettingsData } from "./lib/Settings";
+import { SettingsData } from "./Settings";
 import { asyncDbFactory as db } from "./data/AsyncNedb";
 
 export const logger = new Logger(console);

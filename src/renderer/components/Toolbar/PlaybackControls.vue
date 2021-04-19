@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Player } from "@/lib/Player";
+import { Player } from "@/Player";
 import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component
