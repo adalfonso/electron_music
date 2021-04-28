@@ -1,5 +1,5 @@
 import { MediaDocument } from "@/media/Media";
-import { Playlist } from "./Playlist";
+import { Playlist } from "./playlist/Playlist";
 
 /**
  * Main class for playing audio

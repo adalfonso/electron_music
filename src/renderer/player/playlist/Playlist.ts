@@ -1,4 +1,5 @@
 import { MediaDocument } from "@/media/Media";
+import { shuffle } from "./Shuffle";
 
 /**
  * Different states a playlist can have
@@ -25,6 +26,9 @@ export class Playlist {
 
   /** List of audio tracks being browsed */
   private _browsing_list: MediaDocument[] = [];
+
+  /** If the now playing list shuffled */
+  private _is_shuffled: boolean = false;
 
   /**
    * Create a new Playlist
@@ -85,6 +89,7 @@ export class Playlist {
    */
   public setMainList(list: MediaDocument[]) {
     this._state = PlaylistState.Main;
+    this._is_shuffled = false;
     this._main_list = list;
     this._index = 0;
   }
@@ -100,6 +105,14 @@ export class Playlist {
   public setBrowsingList(list: MediaDocument[]) {
     this._state = PlaylistState.Browsing;
     this._browsing_list = list;
+  }
+
+  public toggleShuffle() {
+    this._is_shuffled = !!this._is_shuffled;
+
+    this._main_list = this._is_shuffled
+      ? shuffle([...this._main_list])
+      : sort(this._main_list);
   }
 
   /** If there is a previous item in the main playlist */

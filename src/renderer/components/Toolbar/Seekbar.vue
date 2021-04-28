@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Player } from "@/Player";
+import { Player } from "@/player/Player";
 import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component

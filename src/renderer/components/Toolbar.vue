@@ -17,7 +17,7 @@
 <script lang="ts">
 import PlaybackControlsComponent from "./Toolbar/PlaybackControls.vue";
 import SeekbarComponent from "./Toolbar/Seekbar.vue";
-import { Player } from "@/Player";
+import { Player } from "@/player/Player";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({

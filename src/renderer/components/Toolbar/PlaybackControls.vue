@@ -36,11 +36,13 @@
         ></div>
       </div>
     </section>
+
+    <div class="shuffle" @click="toggleShuffle">Shuffle</div>
   </div>
 </template>
 
 <script lang="ts">
-import { Player } from "@/Player";
+import { Player } from "@/player/Player";
 import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component
@@ -113,6 +115,10 @@ export default class PlaybackControlsComponent extends Vue {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.shuffle {
+  color: $light-blue;
 }
 
 .other-options {

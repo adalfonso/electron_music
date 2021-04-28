@@ -43,9 +43,9 @@
 </template>
 
 <script lang="ts">
-import { PlaylistState } from "../Playlist";
+import { PlaylistState } from "../player/playlist/Playlist";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { Player } from "@/Player";
+import { Player } from "@/player/Player";
 
 @Component
 export default class PlaylistComponent extends Vue {

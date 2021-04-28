@@ -1,7 +1,7 @@
 import fs from "fs";
 import mm from "musicmetadata";
 import { MediaDocument, MediaMetaData } from "@/media/Media";
-import { MediaMediator } from "@/MediaMediator";
+import { MediaMediator } from "@/media/MediaMediator";
 
 interface MetaDataResult {
   path: string;

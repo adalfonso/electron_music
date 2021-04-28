@@ -31,7 +31,7 @@
 import CategoryComponent from "./Categories/Category.vue";
 import { CategoryData, SelectionCategory, Selector } from "@/media/Selector";
 import { MediaDocument } from "@/media/Media";
-import { Player } from "@/Player";
+import { Player } from "@/player/Player";
 import { Settings } from "@/Settings";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { mediaTransformations, unknown } from "@/media/Transform";

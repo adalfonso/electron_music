@@ -3,7 +3,7 @@ import App from "@/App.vue";
 import Vue from "vue";
 import { Logger } from "./Logger";
 import { MediaDocument } from "./media/Media";
-import { MediaMediator } from "./MediaMediator";
+import { MediaMediator } from "./media/MediaMediator";
 import { SettingsData } from "./Settings";
 import { asyncDbFactory as db } from "./data/AsyncNedb";
 

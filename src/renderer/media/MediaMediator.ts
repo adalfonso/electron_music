@@ -1,5 +1,5 @@
-import { Datastore } from "./data/Datastore";
-import { MediaDocument, MediaMetaData } from "./media/Media";
+import { Datastore } from "../data/Datastore";
+import { MediaDocument, MediaMetaData } from "./Media";
 
 /** Media local an stored media data */
 export class MediaMediator {
