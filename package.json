@@ -27,7 +27,7 @@
     "electron-webpack": "^2.8.2",
     "electron-webpack-ts": "^4.0.1",
     "electron-webpack-vue": "^2.4.0",
-    "jsdom": "16.2.2",
+    "jsdom": "16.5.0",
     "jsdom-global": "3.0.2",
     "mocha": "^6.2.3",
     "node-sass": "^4.13.1",
