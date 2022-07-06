@@ -44,7 +44,7 @@
     "webpack": "~4.42.1"
   },
   "dependencies": {
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "musicmetadata": "^2.0.5",
     "nedb": "^1.8.0",
     "source-map-support": "^0.5.16",
